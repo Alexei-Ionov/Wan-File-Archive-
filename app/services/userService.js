@@ -6,8 +6,6 @@ exports.createAccount = async (username, email, password) => {
         const encryptedPassword = await argon2.hash(password, {
             hashLength: 64
         });
-        console.log(encryptedPassword);
-        console.log(encryptedPassword.length);
         const newUser = await userModel.createUser(username, email, encryptedPassword);
         return newUser;
     } catch (err) {

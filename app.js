@@ -7,8 +7,11 @@
  */
 const express = require("express");
 const dotenv = require("dotenv");
-const handleError = require("./app/middleware/errorHandler.js");
+const handleError = require("./app/middleware/errorHandler");
 const router = require("./app/routes/index.js");
+const session = require('express-session');
+const { sessionStore } = require('./app/config/mongo');
+
 
 dotenv.config();
 
@@ -21,8 +24,15 @@ const app = express();
 
 /* middleware to parse JSON requests */
 app.use(express.json());
+/* middleware for parsing HTML form submissions */
+app.use(express.urlencoded({ extended: true }));
 
-console.log("handling routes...");
+app.use(session({
+  secret: process.env.MONGO_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: sessionStore,
+}));
 /* route all paths to app/routes/index.js file */
 app.use("/", router);
 app.use(handleError);

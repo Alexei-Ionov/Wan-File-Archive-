@@ -1,4 +1,11 @@
 const userService = require("../services/userService");
+const { v4: uuidv4 } = require('uuid');
+
+function setUserID(req) { 
+  // Generate a v4 (random) UUID
+  const uuid = uuidv4();
+  req.session.userID = uuid;
+}
 
 exports.getUsers = async (req, res, next) => {
   try {
@@ -9,6 +16,7 @@ exports.getUsers = async (req, res, next) => {
     throw err;
   }
 };
+
 exports.createUser = async (req, res, next) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
@@ -18,6 +26,7 @@ exports.createUser = async (req, res, next) => {
   }
   try {
     const newUser = await userService.createAccount(username, email, password);
+    setUserID(req);
     res.status(201).json(newUser);
   } catch (err) {
     console.log(err.message);
@@ -40,8 +49,17 @@ exports.loginUser = async (req, res, next) =>  {
   }
   try { 
     const userInfo = await userService.login(username, password);
+    setUserID(req);
     return res.status(200).json(userInfo);
   } catch (err) {
     next(err);
   }
 };
+
+exports.viewProfile = async (req, res, next) => {     
+  res.status(201).send("profile viewed successfully !");
+}
+
+exports.loginPage = async (req, res, next) => {     
+  res.status(201).send("u need to log in bud!");
+}
