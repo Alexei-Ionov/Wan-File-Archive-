@@ -1,0 +1,13 @@
+Ideas for optimizations: 
+
+1.) Optimizing upvotes/downvotes
+
+As of right now, we are performing an update to our db each time a user gets upvoted/downvoted. One possibly optimization is to 
+do batch updates depending on the amount of votes the file/user already has and to leverage redis for this. So for example, we can store a user's votes in redis for faster access and only at certain intervals / periods would we flush this to disk to our postgres db.
+
+
+2.) Optimizing file viewing
+
+Chances are, a user that goes to a particular school and is a certain major will view documents under this umbrella. And so, one ideacould be to prefetch the top say 10 files for that school & major, store it in our cache (redis), and so then after the user goes to view files they might have already been prefetched. 
+
+3.) : ) 
