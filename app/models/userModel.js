@@ -7,7 +7,7 @@ exports.getAllUsers = async () => {
 };
 
 /* called when a user tries to create an account */
-exports.checkIfUsernameExists = async (username) => {
+exports.getUser = async (username) => {
   const res = await db.query("SELECT * FROM users WHERE username = $1", [username,]);
   return res.rows[0]; //returns undefined if user doesn't exist in our db
 };
@@ -17,21 +17,20 @@ exports.createUser = async (username, email, encryptedPassword) => {
   const client = await db.connect();
   try {
     await client.query("BEGIN");
-    const result = await this.checkIfUsernameExists(username);
+    const result = await this.getUser(username);
     if (result != undefined) {
-      const err = new Error("user with username alr exists");
+      const err = new Error("user with username already exists");
       err.name = "ValidationError";
       throw err;
     }
     const query =
-      "INSERT INTO users (username, password, email, rating) VALUES ($1, $2, $3, $4) RETURNING *";
+      "INSERT INTO users (username, encryptedPassword, email, rating) VALUES ($1, $2, $3, $4) RETURNING *";
     const values = [username, encryptedPassword, email, 0];
     const newUser = await db.query(query, values);
     await client.query("COMMIT");
     return newUser;
   } catch (err) {
     await client.query("ROLLBACK");
-    console.log(err.message);
     throw err;
   } finally {
     client.release();
@@ -64,11 +63,12 @@ exports.updateUserRating = async (username, upvote) => {
     throw err;
   }
 };
-
-exports.login = async (username, password) => {
-  const query = "SELECT * FROM users WHERE username = $1 AND password = $2";
+/* CURRENTLY UNUSED */
+exports.login = async (username, encryptedPassword) => {
+  const query = "SELECT * FROM users WHERE username = $1 AND encryptedPassword = $2";
   try {
-    const res = await db.query(query, [username, password]);
+    const res = await db.query(query, [username, encryptedPassword]);
+    console.log(res.rows);
     return res.rows[0];
   } catch (err) {
     throw err;

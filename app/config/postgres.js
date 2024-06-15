@@ -33,7 +33,7 @@ async function createNewUserTable() {
         id SERIAL PRIMARY KEY, 
         username VARCHAR(30) UNIQUE NOT NULL, 
         email VARCHAR(50) NOT NULL, 
-        password VARCHAR(256) NOT NULL, 
+        encryptedPassword VARCHAR(256) NOT NULL, 
         rating INTEGER NOT NULL
     );
   `;

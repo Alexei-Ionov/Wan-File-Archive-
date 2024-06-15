@@ -12,7 +12,6 @@ exports.getUsers = async (req, res, next) => {
     const users = await userService.getUsers();
     return res.status(201).json(users);
   } catch (err) {
-    console.log(err.message);
     throw err;
   }
 };
@@ -29,11 +28,6 @@ exports.createUser = async (req, res, next) => {
     setUserID(req);
     res.status(201).json(newUser);
   } catch (err) {
-    console.log(err.message);
-    /* case where username already exists */
-    if (err.name == "ValidationError") {
-      return res.status(400).json({ error: err.message });
-    }
     /* pass error onto global error handler */
     next(err);
   }
@@ -44,13 +38,14 @@ exports.loginUser = async (req, res, next) =>  {
   const { username, password } = req.body;
   /* invalid username & password */
   if (!username || !password) {
+    console.log("error happens inside controller??");
     const err = new Error("Invalid username or password.");
-    return res.status(401).json({error: err});
+    throw err;
   }
   try { 
-    const userInfo = await userService.login(username, password);
+    await userService.login(username, password);
     setUserID(req);
-    return res.status(200).json(userInfo);
+    return res.redirect("/home");
   } catch (err) {
     next(err);
   }
@@ -61,5 +56,10 @@ exports.viewProfile = async (req, res, next) => {
 }
 
 exports.loginPage = async (req, res, next) => {     
-  res.status(201).send("u need to log in bud!");
+  res.status(201).send('<h1> Log in below </h1>');
 }
+
+exports.homePage = async(req, res, next) => { 
+  res.status(201).send('<h1> Home Page </h1>');
+}
+
