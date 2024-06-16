@@ -5,12 +5,13 @@
  * Date: 5/13/2024
  *
  */
-const express = require("express");
-const dotenv = require("dotenv");
-const handleError = require("./app/middleware/errorHandler");
-const router = require("./app/routes/index.js");
+const express = require('express');
+const dotenv = require('dotenv');
+const handleError = require('./app/middleware/errorHandler');
+const router = require('./app/routes/index.js');
 const session = require('express-session');
 const { sessionStore } = require('./app/config/mongo');
+const sessionExtender = require('./app/middleware/sessionExtension');
 
 
 dotenv.config();
@@ -38,7 +39,12 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: sessionStore,
+  cookie: {
+    secure: false,
+    maxAge: 3 * 1000 * 60 * 60 * 24, //persistent cookie for 3 days
+  }
 }));
+app.use(sessionExtender);
 /* route all paths to app/routes/index.js file */
 app.use("/", router);
 app.use(handleError);
