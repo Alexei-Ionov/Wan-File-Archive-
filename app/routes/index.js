@@ -1,8 +1,7 @@
 const express = require("express");
-const router = express.Router();
-
 const userController = require("../controllers/userController");
-const authenticate = require('../middleware/authentication')
+const router = express.Router();
+const authenticate = require('../middleware/authentication');
 const fileController = require('../controllers/fileController');
 
 /* <--------- ACCOUNT CREATION ---------> */

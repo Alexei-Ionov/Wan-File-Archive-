@@ -11,7 +11,6 @@ const handleError = require('./app/middleware/errorHandler');
 const router = require('./app/routes/index.js');
 const session = require('express-session');
 const { sessionStore } = require('./app/config/mongo');
-const sessionExtender = require('./app/middleware/sessionExtension');
 
 
 dotenv.config();
@@ -44,7 +43,6 @@ app.use(session({
     maxAge: 3 * 1000 * 60 * 60 * 24, //persistent cookie for 3 days
   }
 }));
-app.use(sessionExtender);
 /* route all paths to app/routes/index.js file */
 app.use("/", router);
 app.use(handleError);
