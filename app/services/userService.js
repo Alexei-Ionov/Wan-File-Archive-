@@ -26,9 +26,13 @@ exports.getUsers = async () => {
 /* current implementation has it so that we don't return anything up to the controller. */ 
 exports.login = async (username, password) =>  {
     try { 
-        const { encryptedpassword } = await userModel.getUser(username);
-        const userObject = await userModel.getUser(username);
-        console.log(userObject);
+        const userData = await userModel.getUser(username);
+        /* user doesn't exist in db */
+        if (userData == undefined) {
+            const err = new Error("No user exists for this username.");
+            throw err;
+        }
+        const { encryptedpassword } = userData;
         const passwordMatch = await argon2.verify(encryptedpassword, password);
         if (!passwordMatch) {
             const err = new Error("Invalid credentials.");

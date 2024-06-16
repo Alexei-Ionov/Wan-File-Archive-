@@ -2,6 +2,7 @@ const express = require("express");
 const userController = require("../controllers/userController");
 const router = express.Router();
 const authenticate = require('../middleware/authentication')
+
 /*
 Account creation: 
     form: 
@@ -9,7 +10,10 @@ Account creation:
         email, 
         password
 */
-router.post("/user/create", userController.createUser);
+
+/* ACCOUNT CREATION */
+router.get("/signup", userController.signUpPage)
+router.post("/signup", userController.createUser);
 
 /* LOGIN */ 
 router.get("/login", userController.loginPage);

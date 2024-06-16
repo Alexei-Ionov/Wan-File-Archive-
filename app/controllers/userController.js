@@ -24,9 +24,8 @@ exports.createUser = async (req, res, next) => {
       .send("Need a valid username, email, and password to create acc");
   }
   try {
-    const newUser = await userService.createAccount(username, email, password);
-    setUserID(req);
-    res.status(201).json(newUser);
+    await userService.createAccount(username, email, password);
+    res.render('login');
   } catch (err) {
     /* pass error onto global error handler */
     next(err);
@@ -38,7 +37,6 @@ exports.loginUser = async (req, res, next) =>  {
   const { username, password } = req.body;
   /* invalid username & password */
   if (!username || !password) {
-    console.log("error happens inside controller??");
     const err = new Error("Invalid username or password.");
     throw err;
   }
@@ -51,15 +49,20 @@ exports.loginUser = async (req, res, next) =>  {
   }
 };
 
+/* <--------- GET REQUESTS --------->  */
 exports.viewProfile = async (req, res, next) => {     
   res.status(201).send("profile viewed successfully !");
 }
 
 exports.loginPage = async (req, res, next) => {     
-  res.status(201).send('<h1> Log in below </h1>');
+  res.render('login');
 }
 
 exports.homePage = async(req, res, next) => { 
-  res.status(201).send('<h1> Home Page </h1>');
+  res.render('home');
+}
+
+exports.signUpPage = async(req, res, next) => { 
+  res.render('signup')
 }
 

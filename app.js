@@ -22,6 +22,12 @@ console.log("booting express...");
 /* start up our express application */
 const app = express();
 
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
+
+// Specify the views directory (optional, defaults to './views')
+app.set('views', './app/views');
+
 /* middleware to parse JSON requests */
 app.use(express.json());
 /* middleware for parsing HTML form submissions */
@@ -38,5 +44,5 @@ app.use("/", router);
 app.use(handleError);
 
 app.listen(PORT, () => {
-  console.log("server running on port 8080");
+  console.log("server running on port 8000");
 });
