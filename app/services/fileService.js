@@ -1,9 +1,10 @@
 const fileModel = require('../models/fileModel');
+const { upload } = require('../config/aws');
 /* 
 uploads file to s3, and if successfull, sends metadata to fileModel which handles storing the 
 file metadata into MONGODB 
 */
-exports.uploadFile = async (university, department, course_number, username, content_type) => {
+exports.uploadFileMetadata = async (university, department, course_number, username, content_type) => {
     const s3key = "key";
     const file_name = "my_test_file";
     const file_size = 100;
