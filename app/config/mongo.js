@@ -23,6 +23,7 @@ const sessionStore = new MongoStore({
 // /* config for mongoDB to hold uploaded file metadata from users */
 const fileSchema = new mongoose.Schema({
   filename: String, 
+  fileid: String, 
   size: Number, 
   rating: Number, 
   owner: String, 
@@ -32,9 +33,24 @@ const fileSchema = new mongoose.Schema({
   department: String, 
   course_number: Number,
   content_type: String,
+  votes: { 
+    upvotes: [Number], //list of user ids that upvoted the file
+    downvotes: [Number],
+  }
 });
 
 const Files = mongoose.model('Files', fileSchema);
+
+
+const deleteAllDocs = async () => { 
+  try { 
+    Files.deleteMany({});
+    console.log("successfully dropped prev files collection");
+  } catch (err) { 
+    console.log("error deleting docs");
+    throw err;
+  }
+}
 
 // Close the connection when the application is shutting down
 process.on('SIGINT', async () => {

@@ -1,10 +1,7 @@
 const userService = require("../services/userService");
-const { v4: uuidv4 } = require('uuid');
 
-function setSessionUserID(req) { 
-  // Generate a v4 (random) UUID
-  const uuid = uuidv4();
-  req.session.userID = uuid;
+function setSessionUserID(req, userID) { 
+  req.session.userID = userID;
 }
 function setSessionUsername(req, username) { 
   req.session.username = username;
@@ -34,10 +31,10 @@ exports.loginUser = async (req, res, next) =>  {
     throw err;
   }
   try { 
-    await userService.login(username, password);
+    const userID = await userService.login(username, password);
 
     /* set up session-related things */
-    setSessionUserID(req);
+    setSessionUserID(req, userID);
     setSessionUsername(req, username);
     
     return res.redirect("/home");

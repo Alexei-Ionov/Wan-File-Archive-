@@ -14,8 +14,9 @@ exports.getUser = async (username) => {
 
 /* called when a user creates an account */
 exports.createUser = async (username, email, encryptedPassword) => {
-  const client = await db.connect();
+  
   try {
+    const client = await db.connect();
     await client.query("BEGIN");
     const result = await this.getUser(username);
     if (result != undefined) {
@@ -24,7 +25,7 @@ exports.createUser = async (username, email, encryptedPassword) => {
       throw err;
     }
     const query =
-      "INSERT INTO users (username, encryptedPassword, email, rating) VALUES ($1, $2, $3, $4) RETURNING *";
+      "INSERT INTO users (username, encryptedpassword, email, rating) VALUES ($1, $2, $3, $4) RETURNING *";
     const values = [username, encryptedPassword, email, 0];
     const newUser = await db.query(query, values);
     await client.query("COMMIT");

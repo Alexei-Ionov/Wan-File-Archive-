@@ -12,10 +12,10 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
-async function dropPrevUserTable() { 
+async function dropPrevTable(table) { 
   /* dropping previous user table */
-  console.log("dropping previous user table if it exists...");
-  const dropTableQuery = 'DROP TABLE IF EXISTS users;';
+  console.log(`dropping previous ${table} table if it exists...`);
+  const dropTableQuery = `DROP TABLE IF EXISTS ${table};`;
   try { 
     await pool.query(dropTableQuery);
     console.log("prev user table dropped successfully");
@@ -25,15 +25,14 @@ async function dropPrevUserTable() {
   }
 }
 
-
 async function createNewUserTable() {
   console.log("creating new user table");
   const createUserTableQuery = `
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE users (
         id SERIAL PRIMARY KEY, 
         username VARCHAR(30) UNIQUE NOT NULL, 
         email VARCHAR(50) NOT NULL, 
-        encryptedPassword VARCHAR(256) NOT NULL, 
+        encryptedpassword VARCHAR(256) NOT NULL, 
         rating INTEGER NOT NULL
     );
   `;
@@ -46,8 +45,9 @@ async function createNewUserTable() {
   }
 }
 
+
 async function main() { 
-  await dropPrevUserTable();
+  await dropPrevTable("users");
   await createNewUserTable();
 }
 main();

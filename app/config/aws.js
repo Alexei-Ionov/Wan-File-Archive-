@@ -1,7 +1,8 @@
-const { S3Client, DeleteObject} = require('@aws-sdk/client-s3'); // AWS SDK v3
+const { S3Client, DeleteObject, GetObject} = require('@aws-sdk/client-s3'); // AWS SDK v3
 const { Upload } = require('@aws-sdk/lib-storage'); // AWS SDK v3 for multipart uploads
 const multer = require('multer');
 const multerS3 = require('multer-s3');
+
 
 // Load environment variables from .env file
 require('dotenv').config();
@@ -26,6 +27,7 @@ const upload = multer({
   }),
 });
 
+
 const deleteFile = async (fileKey) => {
     try { 
         const params = {
@@ -38,6 +40,20 @@ const deleteFile = async (fileKey) => {
     } catch (err) { 
         throw new Error("error deleting file from s3 : (");
     }
+}
+
+const getFile = async (fileKey) => { 
+  try { 
+    const params = {
+      Bucket: AWS_S3_BUCKET_NAME,
+      Key: fileKey,
+    }
+    const command = new (params);
+    const response = await s3Client.send(command);
+    return response;
+  } catch (err) { 
+      throw new Error("error deleting file from s3 : (");
+  }
 }
 
 module.exports = {
