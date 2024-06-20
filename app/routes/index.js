@@ -31,7 +31,7 @@ router.get("/contribute", fileController.contributePage);
 
 
 /* <--------- VOTE FILE ---------> */
-router.post("/home/vote", authenticate, )
+router.post("/home/vote", authenticate, fileController.voteFile);
 
 
 /* <--------- ADMIN ---------> */

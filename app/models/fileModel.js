@@ -1,6 +1,6 @@
 const { Files } = require('../config/mongo');
 const mongoose = require('mongoose');
-
+const userModel = require('userModel');
 const page_size = 5;
 exports.uploadFileMetadata = async (university, department, course_number, username, s3key, file_name, file_size, content_type, fileID) => {
     try { 
@@ -44,9 +44,10 @@ exports.loadFilesMetadata = async (university, department, course_number, conten
     }
 };
 
-async function voteHelper(toInsert, toRemove, session, vote, file, userID) { 
-    //if user alr upvoted/downvoted this file
+async function updateFileRating(toInsert, toRemove, session, vote, file, userID) { 
+    
     try { 
+        //if user alr upvoted/downvoted this file
         if (toInsert.includes(userID)) { 
             return;
         }
@@ -63,8 +64,6 @@ async function voteHelper(toInsert, toRemove, session, vote, file, userID) {
         }
         file.rating += vote;
         await file.save({session});
-        await session.commitTransaction();
-        console.log("voting transaction completed!");
     } catch (err) {
         throw err;
     }
@@ -86,10 +85,18 @@ exports.voteFile = async (fileid, vote, userID) => {
             throw new Error("File not found.");
         }
         if (vote) { 
-            await voteHelper(file.upvote, file.downvote, session, vote, file, userID);
+            await updateFileRating(file.upvote, file.downvote, session, vote, file, userID);
         } else { 
-            await voteHelper(file.downvote, file.upvote, session, vote, file, userID);
+            await updateFileRating(file.downvote, file.upvote, session, vote, file, userID);
         }
+
+         /* at this point i also need to update the user's rating as well! */
+        const rowCount = await userModel.updateUserRating(userID, vote);
+        if (!rowCount) { 
+            throw new Error("failed to update user rating on file upvote/downvote.");
+        }
+        await session.commitTransaction();
+        console.log("voting transaction completed!");
     } catch (err) { 
         console.log(err);
         await session.abortTransaction();

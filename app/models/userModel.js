@@ -49,21 +49,25 @@ exports.deleteUser = async (username) => {
   }
 };
 
-exports.updateUserRating = async (username, upvote) => {
+exports.updateUserRating = async (userID, upvote) => {
   let query;
   if (upvote) {
-    query = "UPDATE users SET rating = rating + 1 WHERE username = $1";
+    query = "UPDATE users SET rating = rating + 1 WHERE id = $1";
   } else {
-    query = "UPDATE users SET rating = rating - 1 WHERE username = $1";
+    query = "UPDATE users SET rating = rating - 1 WHERE id = $1";
   }
   try {
-    const res = await db.query(query, [username]);
+    const res = await db.query(query, [userID]);
     return res.rowCount;
   } catch (err) {
     console.log("error updating user rating...", err.message);
     throw err;
   }
 };
+
+
+
+
 /* CURRENTLY UNUSED */
 exports.login = async (username, encryptedPassword) => {
   const query = "SELECT * FROM users WHERE username = $1 AND encryptedPassword = $2";
