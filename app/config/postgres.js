@@ -28,7 +28,7 @@ async function dropPrevTable(table) {
 async function createNewUserTable() {
   console.log("creating new user table");
   const createUserTableQuery = `
-    CREATE TABLE users (
+    CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY, 
         username VARCHAR(30) UNIQUE NOT NULL, 
         email VARCHAR(50) NOT NULL, 
@@ -47,7 +47,7 @@ async function createNewUserTable() {
 
 
 async function main() { 
-  await dropPrevTable("users");
+  // await dropPrevTable("users");
   await createNewUserTable();
 }
 main();

@@ -14,10 +14,9 @@ exports.getUser = async (username) => {
 
 /* called when a user creates an account */
 exports.createUser = async (username, email, encryptedPassword) => {
-  
+  const client = await db.connect();
+  await client.query("BEGIN");
   try {
-    const client = await db.connect();
-    await client.query("BEGIN");
     const result = await this.getUser(username);
     if (result != undefined) {
       const err = new Error("user with username already exists");
@@ -51,7 +50,7 @@ exports.deleteUser = async (username) => {
 
 exports.updateUserRating = async (userID, upvote) => {
   let query;
-  if (upvote) {
+  if (upvote === "1") {
     query = "UPDATE users SET rating = rating + 1 WHERE id = $1";
   } else {
     query = "UPDATE users SET rating = rating - 1 WHERE id = $1";

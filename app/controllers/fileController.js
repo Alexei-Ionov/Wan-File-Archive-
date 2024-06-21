@@ -1,5 +1,7 @@
 const fileService = require('../services/fileService');
 const { deleteFile } = require('../config/aws');
+
+
 /* <------------- POST REQUESTS -------------> */
 /* 
     when a user decides to view/contribute the following info will be sent along :
@@ -17,13 +19,14 @@ exports.uploadFile = async (req, res, next) => {
     }
     // const username = req.session.username; TURNED OFF FOR EASY API DEV
     const username = "KoolKaa"
+    const userID = req.session.userID;
     // const { university, department, course_number, content_type } = req.body;
     const university = "Berkeley";
     const department = "CS";
     const course_number = 162;
     const content_type = "exam";
     try { 
-        await fileService.uploadFileMetadata(university, department, course_number, username, content_type, req.file.originalname, req.file.size, req.file.key);
+        await fileService.uploadFileMetadata(userID, university, department, course_number, username, content_type, req.file.originalname, req.file.size, req.file.key);
         res.status(201).send("<h1>File Uploaded Successfully!!</h1>");
     } catch (err) {
         /* IN CASE WE FAIL ON UPLOADING FILE METADATA TO MONGO, we need to rollback upload to s3!*/
@@ -46,13 +49,20 @@ exports.loadFilesMetadata = async (req, res, next) => {
 
 exports.voteFile = async (req, res, next) => { 
     const { fileid, vote } = req.body;
-    if (vote !== 0 || vote !== 1) { 
+
+    if (vote !== "0" && vote !== "1") { 
         throw new Error("Invalid vote");
     }
-    const userID = req.session.userID;
+    const userID = 2;
+    // const userID = req.session.userID;
     try {   
-        await fileService.voteFile(fileid, vote, userID);
-        res.status(201).send("Successfully voted for file!");
+        const response = await fileService.voteFile(fileid, vote, userID);
+        if (response) { 
+            res.status(201).send("Successfully voted for file!");
+        } else { 
+            res.status(201).send("cant upvote / downvote same file");
+        }
+        
     } catch (err) { 
         throw err;
     }
