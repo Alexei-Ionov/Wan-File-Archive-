@@ -1,5 +1,5 @@
 const fileService = require('../services/fileService');
-const { deleteFile } = require('../config/aws');
+const { deleteFile, getFile } = require('../config/aws');
 
 
 /* <------------- POST REQUESTS -------------> */
@@ -69,6 +69,21 @@ exports.voteFile = async (req, res, next) => {
 };
 
 /* <------------- GET REQUESTS -------------> */
+
+exports.getFileContents = async (req, res, next) => {
+    const { s3key } = req.query;
+    try { 
+         const file_data = await getFile(s3key);
+         res.setHeader('Content-Type', file_data.ContentType);
+         res.setHeader('Content-Length', file_data.ContentLength);
+         res.setHeader('ETag', file_data.ETag);
+         res.status(201).send(file_data.body);
+    } catch (err) { 
+        res.status(500).send("error fetching file data");
+        throw err;
+    }
+    
+}
 
 exports.contributePage = async (req, res, next) => { 
     res.render('contribute');

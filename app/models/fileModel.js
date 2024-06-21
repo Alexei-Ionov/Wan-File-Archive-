@@ -60,6 +60,8 @@ async function downvoteFile(file, session, userID) {
         if (!res.matchedCount) { 
             throw new Error("failed to remove userID from upvotes array while downvoting");
         }
+        //accounting for taking this users vote from upvotes
+        file.rating -=1; 
     }
     const res = await Files.updateOne(
         {"fileid": file.fileid},
@@ -89,6 +91,8 @@ async function upvoteFile(file, session, userID) {
         if (!res.matchedCount) { 
             throw new Error("failed to remove userID from downvotes array while upvoting");
         }
+        //accounting for taking this users vote out from downvotes
+        file.rating += 1;
     }
     const res = await Files.updateOne(
         {"fileid": file.fileid},

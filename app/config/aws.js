@@ -48,17 +48,18 @@ const getFile = async (fileKey) => {
       Bucket: AWS_S3_BUCKET_NAME,
       Key: fileKey,
     }
-    const command = new (params);
+    const command = new GetObject(params);
     const response = await s3Client.send(command);
     return response;
   } catch (err) { 
-      throw new Error("error deleting file from s3 : (");
+      throw new Error("error getting file from s3");
   }
 }
 
 module.exports = {
   upload,
   deleteFile,
+  getFile,
 };
 
 
