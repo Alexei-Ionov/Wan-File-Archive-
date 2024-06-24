@@ -20,6 +20,8 @@ router.post("/home", fileController.loadFilesMetadata);
 
 
 /* <--------- VIEW FILE ---------> */
+router.get("/getFile", fileController.getFileContents);
+
 
 /* <--------- PROFILE ---------> */
 router.get("/profile", authenticate, userController.viewProfile);
