@@ -52,8 +52,16 @@ exports.getUsers = async (req, res, next) => {
     throw err;
   }
 };
-exports.viewProfile = async (req, res, next) => {     
-  res.status(201).send("profile viewed successfully !");
+exports.viewProfile = async (req, res, next) => {    
+  try { 
+    // const userID = req.session.userID;
+    const userID = 1;
+    const userData = await userService.viewProfile(userID);
+    res.status(201).json(userData);
+  } catch (err) { 
+    throw err;
+  }
+  
 };
 
 exports.loginPage = async (req, res, next) => {     

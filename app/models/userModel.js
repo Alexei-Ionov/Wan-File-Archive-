@@ -65,7 +65,16 @@ exports.updateUserRating = async (userID, upvote) => {
 };
 
 
-
+exports.getProfile = async (userID) => { 
+  try { 
+    const query = `SELECT * FROM users WHERE id = $1`;
+    const res = await db.query(query, [userID]);
+    return res.rows[0];
+  } catch (err) { 
+    console.log(err.message);
+    throw err;
+  }
+}
 
 /* CURRENTLY UNUSED */
 exports.login = async (username, encryptedPassword) => {

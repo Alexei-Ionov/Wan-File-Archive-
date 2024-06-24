@@ -20,11 +20,11 @@ router.post("/home", fileController.loadFilesMetadata);
 
 
 /* <--------- VIEW FILE ---------> */
-router.get("/getFile", fileController.getFileContents);
+router.get("/getFile", authenticate, fileController.getFileContents);
 
 
 /* <--------- PROFILE ---------> */
-router.get("/profile", authenticate, userController.viewProfile);
+router.get("/profile", userController.viewProfile);
 
 /* <--------- CONTRIBUTE ---------> */
 // router.post("/contribute", authenticate, fileController.uploadFile); commented FOR TESTING PURPOSES

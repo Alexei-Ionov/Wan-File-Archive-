@@ -42,3 +42,12 @@ exports.login = async (username, password) =>  {
         throw err;
     }
 };
+
+exports.viewProfile = async (userID) => { 
+    try { 
+        const userData = await userModel.getProfile(userID);
+        return userData;
+    } catch (err) { 
+        throw err;
+    }
+};
