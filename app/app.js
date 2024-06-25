@@ -7,10 +7,10 @@
  */
 const express = require('express');
 const dotenv = require('dotenv');
-const handleError = require('./app/middleware/errorHandler');
-const router = require('./app/routes/index.js');
+const handleError = require('./middleware/errorHandler');
+const router = require('./routes/index.js');
 const session = require('express-session');
-const { sessionStore } = require('./app/config/mongo');
+const { sessionStore } = require('./config/mongo');
 
 
 dotenv.config();
