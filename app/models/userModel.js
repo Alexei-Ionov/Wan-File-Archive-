@@ -1,4 +1,5 @@
 const db = require("../config/postgres");
+const { sessionStore } = require('../config/mongo');
 
 /* admin helper function */
 exports.getAllUsers = async () => {
@@ -76,6 +77,19 @@ exports.getProfile = async (userID) => {
   }
 }
 
+exports.logout = async (sessionID) => { 
+  try { 
+    await sessionStore.destroy(sessionID, (err) => {
+      if (err) {
+        console.error('Error destroying session:', err);
+      } else {
+        console.log('Session destroyed successfully');
+      }
+    });
+  } catch (err) { 
+    throw err;
+  }
+};
 /* CURRENTLY UNUSED */
 exports.login = async (username, encryptedPassword) => {
   const query = "SELECT * FROM users WHERE username = $1 AND encryptedPassword = $2";

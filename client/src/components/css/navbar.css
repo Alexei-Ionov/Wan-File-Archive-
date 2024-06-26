@@ -1,0 +1,30 @@
+/* frontend/src/components/Navbar.css */
+nav {
+  background-color: #333;
+  padding: 1rem;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+li {
+  margin-left: 1rem;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: #555;
+}
+
+a:hover {
+  background-color: #777;
+}
+

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
-const { isNumber } = require('util');
 
 // Load environment variables from .env file
 require('dotenv').config();

@@ -43,6 +43,18 @@ exports.loginUser = async (req, res, next) =>  {
   }
 };
 
+exports.logout = async(req, res, next) => {
+  
+  try { 
+    if (!req.sessionID) { 
+      throw new Error("Session ID not found");
+    }
+    await userService.logout(req.sessionID);
+  } catch (err) { 
+    throw err;
+  }
+};
+
 /* <------------ GET REQUESTS ----------->  */
 exports.getUsers = async (req, res, next) => {
   try {

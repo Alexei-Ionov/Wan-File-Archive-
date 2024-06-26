@@ -13,6 +13,9 @@ router.post("/signup", userController.createUser);
 router.get("/login", userController.loginPage);
 router.post("/login", userController.loginUser);
 
+/* <--------- LOGOUT ---------> */
+router.post("/logout", authenticate, userController.logout);
+
 /* <--------- HOME ---------> */
 router.get("/home", userController.homePage);
 // router.post("/home", authenticate, fileController.viewFiles);
@@ -35,6 +38,7 @@ router.get("/contribute", fileController.contributePage);
 /* <--------- VOTE FILE ---------> */
 router.post("/home/vote", fileController.voteFile);
 // router.post("/home/vote", authenticate, fileController.voteFile);
+
 
 
 /* <--------- ADMIN ---------> */

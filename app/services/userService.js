@@ -43,6 +43,14 @@ exports.login = async (username, password) =>  {
     }
 };
 
+exports.logout = async (sessionID) => { 
+    try { 
+        await userModel.logout(sessionID);
+    } catch (err) { 
+        throw err;
+    }
+};
+
 exports.viewProfile = async (userID) => { 
     try { 
         const userData = await userModel.getProfile(userID);
