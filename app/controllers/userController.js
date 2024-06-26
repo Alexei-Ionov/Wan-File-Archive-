@@ -34,7 +34,7 @@ exports.loginUser = async (req, res, next) =>  {
     req.session.email = email;
 
   } catch (err) {
-    next(err);
+    throw err;
   }
 };
 

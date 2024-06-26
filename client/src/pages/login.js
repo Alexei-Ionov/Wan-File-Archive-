@@ -6,15 +6,29 @@ function Login() {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await login({ email, password });
+    setErrorMessage('');
+    try { 
+        const response = await login({ email, password });
+        if (!response.ok) { 
+            const err = await response.json(); 
+            setErrorMessage(err.error);
+            throw new Error("Failed to login");
+        }
+    } catch (err) { 
+        console.log(err.message);
+    }
+    
   };
 
   return (
     <div>
       <h1>Login</h1>
+      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+      <br></br>
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
