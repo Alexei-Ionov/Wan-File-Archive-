@@ -20,9 +20,7 @@ exports.createUser = async (username, email, encryptedPassword) => {
   try {
     const result = await this.getUser(username);
     if (result != undefined) {
-      const err = new Error("user with username already exists");
-      err.name = "ValidationError";
-      throw err;
+      throw new Error("Username is already taken");
     }
     const query =
       "INSERT INTO users (username, encryptedpassword, email, rating) VALUES ($1, $2, $3, $4) RETURNING *";

@@ -1,5 +1,4 @@
 const { S3Client, DeleteObject, GetObjectCommand} = require('@aws-sdk/client-s3'); // AWS SDK v3
-const { Upload } = require('@aws-sdk/lib-storage'); // AWS SDK v3 for multipart uploads
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 

@@ -4,6 +4,8 @@ import Home from './pages/home';
 import Contribute from './pages/contribute';
 import Profile from './pages/profile';
 import NavBar from './components/navbar';
+import Login from './pages/login';
+import SignUp from './pages/signup';
 import { AuthProvider } from './components/authContext';
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
             <Route path="/contribute" element={<Contribute/>}/>
             <Route path="/profile" element={<Profile/>}/>
             <Route path="/login" element={<Login/>}/>
+            <Route path="/signup" element={<SignUp/>}/>
+            
           </Routes>
         </div>
       </Router>

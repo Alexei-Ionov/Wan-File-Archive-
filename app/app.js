@@ -11,6 +11,7 @@ const handleError = require('./middleware/errorHandler');
 const router = require('./routes/index.js');
 const session = require('express-session');
 const { sessionStore } = require('./config/mongo');
+const cors = require('cors');
 
 
 dotenv.config();
@@ -21,12 +22,8 @@ const PORT = process.env.PORT;
 console.log("booting express...");
 /* start up our express application */
 const app = express();
+app.use(cors());
 
-// Set the view engine to EJS
-app.set('view engine', 'ejs');
-
-// Specify the views directory (optional, defaults to './views')
-app.set('views', './app/views');
 
 /* middleware to parse JSON requests */
 app.use(express.json());

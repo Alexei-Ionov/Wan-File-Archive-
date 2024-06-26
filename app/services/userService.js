@@ -31,13 +31,13 @@ exports.login = async (username, password) =>  {
             const err = new Error("No user exists for this username.");
             throw err;
         }
-        const { id, encryptedpassword } = userData;
+        const { id, encryptedpassword, username } = userData;
         const passwordMatch = await argon2.verify(encryptedpassword, password);
         if (!passwordMatch) {
             const err = new Error("Invalid credentials.");
             throw err;
         }
-        return id;
+        return {id, username};
     } catch (err) {
         throw err;
     }

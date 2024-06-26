@@ -5,11 +5,13 @@ const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null);
     const login = async (loginInfo) => { 
         /* loginInfo -> {email: ***, password: ***} */
+        const email = loginInfo.email;
+        const password = loginInfo.password;
         try { 
             const response = await fetch('http://localhost:8000/login', { 
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: {"email": loginInfo.email, "password": loginInfo.password},
+                body: JSON.stringify({ email, password }),
             });
             if (!response.ok) { 
                 throw new Error("Failed to login");

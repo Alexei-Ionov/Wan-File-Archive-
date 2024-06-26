@@ -92,7 +92,3 @@ exports.getFileContents = async (req, res, next) => {
     }
     
 }
-
-exports.contributePage = async (req, res, next) => { 
-    res.render('contribute');
-};
