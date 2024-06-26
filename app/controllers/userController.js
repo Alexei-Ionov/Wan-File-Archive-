@@ -13,28 +13,27 @@ exports.createUser = async (req, res, next) => {
     await userService.createAccount(username, email, password1);
     return res.status(201).send("Account Created Successfully!");
   } catch (err) {
-    /* pass error onto global error handler */
     next(err);
   }
 };
 
 exports.loginUser = async (req, res, next) =>  { 
   const { email, password } = req.body;
-  /* invalid username & password */
-  if (!email || !password) {
-    const err = new Error("Invalid email or password.");
-    throw err;
-  }
   try { 
-    const { userID, username }  = await userService.login(email, password);
-
+    if (!email) {
+      throw new Error("Invalid email");
+    }
+    if (!password) { 
+      throw new Error("Invalid password");
+    }
+    const { userID, username } = await userService.login(email, password);
     /* set up session-related things */
     req.session.userID = userID;
     req.session.username = username;
     req.session.email = email;
-
+    res.status(201).json({"username": username, "email": email});
   } catch (err) {
-    throw err;
+    next(err);
   }
 };
 
@@ -46,7 +45,7 @@ exports.logout = async(req, res, next) => {
     }
     await userService.logout(req.sessionID);
   } catch (err) { 
-    throw err;
+    next(err);
   }
 };
 
@@ -56,7 +55,7 @@ exports.getUsers = async (req, res, next) => {
     const users = await userService.getUsers();
     return res.status(201).json(users);
   } catch (err) {
-    throw err;
+    next(err);
   }
 };
 exports.viewProfile = async (req, res, next) => {    
@@ -66,7 +65,7 @@ exports.viewProfile = async (req, res, next) => {
     const userData = await userService.viewProfile(userID);
     res.status(201).json(userData);
   } catch (err) { 
-    throw err;
+    next(err);
   }
   
 };

@@ -5,11 +5,13 @@ function SignUp() {
     const [password1, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
    
     const handleSubmit = async (event) => {
         event.preventDefault();
         setErrorMessage('');
+        setSuccessMessage('');
         try { 
             if (password1 !== password2) { 
                 setErrorMessage("Passwords don't match!");
@@ -21,12 +23,17 @@ function SignUp() {
                 body: JSON.stringify({ email, username, password1, password2 })
             });
             if (!response.ok) {
-                const err = await response.json();
-                setErrorMessage(err.error); 
-                throw new Error("Failed to create account :O");
+                const message = await response.text();
+                setErrorMessage(message); 
+                throw new Error("Failed to create account");
             }
             const message = await response.text();
             console.log(message);
+            setEmail('');
+            setUsername('');
+            setPassword1('');
+            setPassword2('');
+            setSuccessMessage('Account created!');
         } catch (err) { 
             console.log(err.message);
             return 
@@ -81,6 +88,8 @@ function SignUp() {
                 />
                 <br />
                 <button type="submit">Sign Up</button>
+                <br></br>
+                <p>{successMessage}</p>
             </form>
         </div>
     );

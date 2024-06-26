@@ -22,7 +22,14 @@ const PORT = process.env.PORT;
 console.log("booting express...");
 /* start up our express application */
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: 'http://localhost:3000', // Allow only this origin
+  credentials: true,              // Allow credentials (cookies, authorization headers, etc.)
+};
+app.use(cors(corsOptions));
+
+// app.use(cors()); for all origins
 
 
 /* middleware to parse JSON requests */

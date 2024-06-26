@@ -1,5 +1,5 @@
 function handleError(err, req, res, next) {
   console.log(err.stack);
-  res.status(500).json({error: err.message});
+  res.status(500).send(err.message);
 }
 module.exports = handleError;

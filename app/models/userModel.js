@@ -8,19 +8,37 @@ exports.getAllUsers = async () => {
 };
 
 /* called when a user tries to create an account */
-exports.getUser = async (username) => {
+exports.checkIfUsernameExists = async (username) => {
   const res = await db.query("SELECT * FROM users WHERE username = $1", [username,]);
-  return res.rows[0]; //returns undefined if user doesn't exist in our db
+  return res.rows[0]; //returns undefined if username doesn't exist in our db
 };
+
+exports.checkIfEmailExists = async (email) => {
+  const res = await db.query("SELECT * FROM users WHERE email = $1", [email,]);
+  return res.rows[0]; //returns undefined if email doesn't exist in our db
+};
+
+
+/* called when a user tries to login into their account */
+exports.getUser = async (email) => {
+  const res = await db.query("SELECT * FROM users WHERE email = $1", [email,]);
+  return res.rows[0]; //returns undefined if username doesn't exist in our db
+};
+
+
 
 /* called when a user creates an account */
 exports.createUser = async (username, email, encryptedPassword) => {
   const client = await db.connect();
   await client.query("BEGIN");
   try {
-    const result = await this.getUser(username);
-    if (result != undefined) {
-      throw new Error("Username is already taken");
+    const usernameCheck = await this.checkIfUsernameExists(username);
+    if (usernameCheck != undefined) {
+      throw new Error("Username is already taken!");
+    }
+    const emailCheck = await this.checkIfEmailExists(email);
+    if (emailCheck != undefined) { 
+      throw new Error("Email already has an account");
     }
     const query =
       "INSERT INTO users (username, encryptedpassword, email, rating) VALUES ($1, $2, $3, $4) RETURNING *";

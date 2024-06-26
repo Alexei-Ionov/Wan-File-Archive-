@@ -9,7 +9,6 @@ exports.createAccount = async (username, email, password) => {
         const newUser = await userModel.createUser(username, email, encryptedPassword);
         return newUser;
     } catch (err) {
-        console.log("error hashing password...");
         throw err;
     }
 };
@@ -23,19 +22,17 @@ exports.getUsers = async () => {
   }
 };
 
-exports.login = async (username, password) =>  {
+exports.login = async (email, password) =>  {
     try { 
-        const userData = await userModel.getUser(username);
+        const userData = await userModel.getUser(email);
         /* user doesn't exist in db */
         if (userData == undefined) {
-            const err = new Error("No user exists for this username.");
-            throw err;
+            throw new Error("No user exists for this email");
         }
         const { id, encryptedpassword, username } = userData;
         const passwordMatch = await argon2.verify(encryptedpassword, password);
         if (!passwordMatch) {
-            const err = new Error("Invalid credentials.");
-            throw err;
+            throw new Error("Invalid credentials");
         }
         return {id, username};
     } catch (err) {

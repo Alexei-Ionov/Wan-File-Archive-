@@ -13,11 +13,10 @@ function Login() {
     setErrorMessage('');
     try { 
         const response = await login({ email, password });
-        if (!response.ok) { 
-            const err = await response.json(); 
-            setErrorMessage(err.error);
-            throw new Error("Failed to login");
-        }
+        /* response = '' if no error, else error message */
+        setErrorMessage(response);
+        setEmail('');
+        setPassword('');
     } catch (err) { 
         console.log(err.message);
     }

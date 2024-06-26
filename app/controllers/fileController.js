@@ -32,7 +32,7 @@ exports.uploadFile = async (req, res, next) => {
         /* IN CASE WE FAIL ON UPLOADING FILE METADATA TO MONGO, we need to rollback upload to s3!*/
         const deleteResponse = await deleteFile(req.file.key);
         console.log(deleteResponse);
-        throw err;
+        next(err);
     }    
 };
 
@@ -43,19 +43,20 @@ exports.loadFilesMetadata = async (req, res, next) => {
         const files = await fileService.loadFilesMetadata(university, department, course_number, content_type, page_number);
         res.status(201).json(files);
     } catch (err) { 
-        throw err;
+        next(err);
     }
 };
 
 exports.voteFile = async (req, res, next) => { 
     const { fileid, vote } = req.body;
 
-    if (vote !== "0" && vote !== "1") { 
-        throw new Error("Invalid vote");
-    }
+    
     const userID = 2;
     // const userID = req.session.userID;
     try {   
+        if (vote !== "0" && vote !== "1") { 
+            throw new Error("Invalid vote");
+        }
         const response = await fileService.voteFile(fileid, vote, userID);
         if (response) { 
             res.status(201).send("Successfully voted for file!");
@@ -64,7 +65,7 @@ exports.voteFile = async (req, res, next) => {
         }
         
     } catch (err) { 
-        throw err;
+        next(err);
     }
 };
 
@@ -86,9 +87,7 @@ exports.getFileContents = async (req, res, next) => {
             res.status(500).send('Error streaming file');
         });
     } catch (err) { 
-        console.log(err.message);
-        res.status(500).send("error fetching file data");
-        throw err;
+        next(err);
     }
     
 }
