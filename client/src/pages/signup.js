@@ -20,7 +20,8 @@ function SignUp() {
             const response = await fetch("http://localhost:8000/signup", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ email, username, password1, password2 })
+                body: JSON.stringify({ email, username, password1, password2 }),
+                credentials: 'include',
             });
             if (!response.ok) {
                 const message = await response.text();

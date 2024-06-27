@@ -26,7 +26,7 @@ router.get("/getFile", authenticate, fileController.getFileContents);
 
 
 /* <--------- PROFILE ---------> */
-router.get("/profile", userController.viewProfile);
+router.get("/profile", authenticate, userController.viewProfile);
 
 /* <--------- CONTRIBUTE ---------> */
 // router.post("/contribute", authenticate, fileController.uploadFile); commented FOR TESTING PURPOSES

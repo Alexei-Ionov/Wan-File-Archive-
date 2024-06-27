@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../components/authContext'; 
 
 function Profile() { 
-    const { user } = useContext(AuthContext);
+    const { user, logout} = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
     /* 
     userData = {
@@ -14,8 +14,17 @@ function Profile() {
     }
 
     */
+    const handleLogoutSubmit = async (event) => { 
+        event.preventDefault();
+        try { 
+            await logout();
+        } catch (err) { 
+            console.log(err.message);
+        }
+    }
     useEffect(() => {
         const fetchUserData = async () => { 
+            console.log("fetching user data...");
             try { 
                 const response = await fetch("http://localhost:8000/profile", { 
                     method: 'GET',
@@ -49,6 +58,9 @@ function Profile() {
             <p>Username: {userData.username}</p>
             <p>Email: {userData.email}</p>
             <p>Rating: {userData.rating}</p>
+            <br></br>
+            <br></br>
+            <button onClick={handleLogoutSubmit}>Logout</button>
         </div>
     );
 };

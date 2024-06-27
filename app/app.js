@@ -24,18 +24,12 @@ console.log("booting express...");
 const app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // Allow only this origin
+  origin: 'http://localhost:3000', 
   credentials: true,              // Allow credentials (cookies, authorization headers, etc.)
 };
 app.use(cors(corsOptions));
 
 // app.use(cors()); for all origins
-
-
-/* middleware to parse JSON requests */
-app.use(express.json());
-/* middleware for parsing HTML form submissions */
-app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
   secret: process.env.MONGO_SECRET,
@@ -45,8 +39,15 @@ app.use(session({
   cookie: {
     secure: false,
     maxAge: 3 * 1000 * 60 * 60 * 24, //persistent cookie for 3 days
+    httpOnly: true,
+    sameSite: 'lax',
   }
 }));
+/* middleware to parse JSON requests */
+app.use(express.json());
+/* middleware for parsing HTML form submissions */
+app.use(express.urlencoded({ extended: true }));
+
 /* route all paths to app/routes/index.js file */
 app.use("/", router);
 app.use(handleError);

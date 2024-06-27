@@ -12,26 +12,28 @@ const AuthProvider = ({children}) => {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ email: email, password: password }),
+                credentials: 'include',
             });
             if (!response.ok) { 
                 const errorMsg = await response.text();
                 return errorMsg;
             }
             const userData = await response.json();
-            console.log(userData);
             setUser(userData);
             console.log("login successful!");
-            return ''
+            return '';
         } catch (err) {
             console.log(err.message);
         }
     };
     const logout = async () => { 
         try {
-            await fetch('http://localhost:8000/login', {
+            await fetch('http://localhost:8000/logout', {
                 method: 'POST',
+                credentials: 'include',
             });
             setUser(null);
+            console.log("logout successful!");
         } catch (err) { 
             console.log(err.message);
         }

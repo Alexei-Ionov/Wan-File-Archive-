@@ -26,9 +26,10 @@ exports.loginUser = async (req, res, next) =>  {
     if (!password) { 
       throw new Error("Invalid password");
     }
-    const { userID, username } = await userService.login(email, password);
+    const { id, username } = await userService.login(email, password);
     /* set up session-related things */
-    req.session.userID = userID;
+  
+    req.session.userID = id;
     req.session.username = username;
     req.session.email = email;
     res.status(201).json({"username": username, "email": email});
@@ -60,8 +61,7 @@ exports.getUsers = async (req, res, next) => {
 };
 exports.viewProfile = async (req, res, next) => {    
   try { 
-    // const userID = req.session.userID;
-    const userID = 1;
+    const userID = req.session.userID;
     const userData = await userService.viewProfile(userID);
     res.status(201).json(userData);
   } catch (err) { 
@@ -69,16 +69,4 @@ exports.viewProfile = async (req, res, next) => {
   }
   
 };
-
-// exports.loginPage = async (req, res, next) => {     
-//   res.render('login');
-// };
-
-// exports.homePage = async(req, res, next) => { 
-//   res.render('home');
-// };
-
-// exports.signUpPage = async(req, res, next) => { 
-//   res.render('signup')
-// };
 
