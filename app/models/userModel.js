@@ -92,28 +92,3 @@ exports.getProfile = async (userID) => {
     throw err;
   }
 }
-
-exports.logout = async (sessionID) => { 
-  try { 
-    await sessionStore.destroy(sessionID, (err) => {
-      if (err) {
-        console.error('Error destroying session:', err);
-      } else {
-        console.log('Session destroyed successfully');
-      }
-    });
-  } catch (err) { 
-    throw err;
-  }
-};
-/* CURRENTLY UNUSED */
-exports.login = async (username, encryptedPassword) => {
-  const query = "SELECT * FROM users WHERE username = $1 AND encryptedPassword = $2";
-  try {
-    const res = await db.query(query, [username, encryptedPassword]);
-    console.log(res.rows);
-    return res.rows[0];
-  } catch (err) {
-    throw err;
-  }
-};

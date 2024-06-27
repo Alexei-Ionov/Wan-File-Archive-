@@ -1,9 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../components/authContext'; 
+import { useNavigate } from 'react-router-dom';
 
 function Profile() { 
     const { user, logout} = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
+    const navigate = useNavigate(); // Get the history instance
+
     /* 
     userData = {
         email: '..',
@@ -17,7 +20,10 @@ function Profile() {
     const handleLogoutSubmit = async (event) => { 
         event.preventDefault();
         try { 
-            await logout();
+            console.log("logging out user");
+            await logout(); 
+            navigate('/'); //redirect to home page
+            console.log("logged user out");
         } catch (err) { 
             console.log(err.message);
         }

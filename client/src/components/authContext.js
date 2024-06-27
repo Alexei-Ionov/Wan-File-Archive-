@@ -28,12 +28,13 @@ const AuthProvider = ({children}) => {
     };
     const logout = async () => { 
         try {
-            await fetch('http://localhost:8000/logout', {
+            const response = await fetch('http://localhost:8000/logout', {
                 method: 'POST',
                 credentials: 'include',
             });
+            const message = await response.text();
             setUser(null);
-            console.log("logout successful!");
+            console.log(message);
         } catch (err) { 
             console.log(err.message);
         }

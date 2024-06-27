@@ -38,17 +38,26 @@ exports.loginUser = async (req, res, next) =>  {
   }
 };
 
-exports.logout = async(req, res, next) => {
-  
-  try { 
-    if (!req.sessionID) { 
+exports.logout = async (req, res, next) => {
+  try {
+    if (!req.sessionID) {
       throw new Error("Session ID not found");
     }
-    await userService.logout(req.sessionID);
-  } catch (err) { 
+
+    // Use req.session.destroy to properly handle session destruction
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+
+      // Send response after session is destroyed
+      res.status(200).send("Logout Successful!");
+    });
+  } catch (err) {
     next(err);
   }
 };
+
 
 /* <------------ GET REQUESTS ----------->  */
 exports.getUsers = async (req, res, next) => {
@@ -63,7 +72,7 @@ exports.viewProfile = async (req, res, next) => {
   try { 
     const userID = req.session.userID;
     const userData = await userService.viewProfile(userID);
-    res.status(201).json(userData);
+    return res.status(201).json(userData);
   } catch (err) { 
     next(err);
   }

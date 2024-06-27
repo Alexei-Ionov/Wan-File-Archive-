@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../components/authContext'; 
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage('');
@@ -17,6 +18,7 @@ function Login() {
         setErrorMessage(response);
         setEmail('');
         setPassword('');
+        navigate('/profile');
     } catch (err) { 
         console.log(err.message);
     }
