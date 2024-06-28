@@ -21,10 +21,16 @@ exports.uploadFile = async (req, res, next) => {
     const username = req.session.username; 
     const userID = req.session.userID;
     const { university, department, course_number, content_type } = req.body;
+    console.log(university);
+    console.log(department);
+    console.log(course_number);
+    console.log(content_type);
     /* first verify validity of user input*/
     try { 
         await this.verifyUniversityInputData(university, department, course_number, content_type);
     } catch (err) {
+        console.log("invalid selection values");
+        console.log("deleting file from s3...");
         // delete file from s3
         await deleteFile(req.file.key);
         next(err);
@@ -36,6 +42,8 @@ exports.uploadFile = async (req, res, next) => {
         return res.status(201).send("File Uploaded Successfully!!");
     } catch (err) {
         /* IN CASE WE FAIL ON UPLOADING FILE METADATA TO MONGO, we need to rollback upload to s3!*/
+        console.log("failed to upload file metadata...");
+        console.log("deleting file from s3");
         await deleteFile(req.file.key);
         next(err);
     }    
@@ -108,17 +116,16 @@ exports.getFileContents = async (req, res, next) => {
 };
 
 exports.verifyUniversityInputData = async (university, department, course_number, content_type) => { 
-    /* first check content type since we are not storing this in our db */
-    if (content_type !== 'exam' || content_type !== 'notes' || content_type !== 'cheatsheet' || content_type !== 'outside_source') { 
-        res.status(401).send("Invalid content_type");
-        return;
-    }
     /* validate input data ... make sure no one is writing their own js lol in their browser */
     try { 
+         /* first check content type since we are not storing this in our db */
+
+        if (content_type !== 'exam' && content_type !== 'notes' && content_type !== 'cheatsheet' && content_type !== 'outside_source') { 
+            throw new Error("Invalid content type")
+        }
         await fileService.verifyUniversityInputData(university, department, course_number);
     } catch (err) {
         //err alr contains err msg so we can just propograte to our error handler here
-        next(err);
-        return;
+        throw err;
     }
 };

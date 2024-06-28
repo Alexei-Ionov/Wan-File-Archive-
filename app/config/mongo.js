@@ -32,7 +32,7 @@ const fileSchema = new mongoose.Schema({
   s3key: String,
   university: String, 
   department: String, 
-  course_number: Number,
+  class: String,
   content_type: String,
   votes: { 
     upvotes: [Number], //list of user ids that upvoted the file

@@ -13,7 +13,13 @@ function ClassSelection() {
   const location = useLocation();
 
   const isContributePage = location.pathname === '/contribute';
-
+  const reset = () =>  { 
+    setFile(null);
+    setSelectedClass('');
+    setSelectedDepartment('');
+    setSelectedType('');
+    setSelectedUniversity('');
+  }
   const handleUniversityChange = (event) => {
     const university = event.target.value;
     setSelectedUniversity(university);
@@ -50,22 +56,33 @@ function ClassSelection() {
     setSuccessMsg('');
     setErrMsg('');
 
-    let response;
+    
     try {
       if (isContributePage) {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('university', selectedUniversity);
         formData.append('department', selectedDepartment);
-        formData.append('class', selectedClass);
-        formData.append('type', selectedType);
+        formData.append('course_number', selectedClass);
+        formData.append('content_type', selectedType);
 
-        response = await fetch('http://localhost:8000/contribute', {
+        const response = await fetch('http://localhost:8000/contribute', {
           method: 'POST',
           body: formData,
           credentials: 'include',
         });
+        //reset input form
+        reset();
 
+        //response will ALWAYS be send as message 
+        const message = await response.text();
+        if (!response.ok) {
+          setErrMsg(message);
+          console.log(message);
+          return
+        }
+        setSuccessMsg(message);
+      
       } else {
         const params = new URLSearchParams({
           university: selectedUniversity,
@@ -74,20 +91,24 @@ function ClassSelection() {
           content_type: selectedType,
         }).toString();
 
-        response = await fetch(`http://localhost:8000/content?${params}`, {
+        const response = await fetch(`http://localhost:8000/content?${params}`, {
           method: 'GET',
           credentials: 'include',
         });
+        reset();
+        // response can be message if we error'd in the backend or a json object representing the files metadata!
+        if (!response.ok) {
+          const message = await response.text();
+          setErrMsg(message);
+          console.log(message);
+          return;
+        }
+        const files = await response.json();
+        console.log(files);
       }
-      const msg = await response.text();
-      if (!response.ok) {
-        setErrMsg(msg);
-        console.log(msg); 
-      } else { 
-        setSuccessMsg(msg);
-        console.log(msg); 
-      }
+      
     } catch (error) {
+      reset();
       console.error('Error:', error.message);
     }
   };
@@ -134,8 +155,8 @@ function ClassSelection() {
                 .find((uni) => uni.university === selectedUniversity)
                 ?.departments.find((dep) => dep.departmentName === selectedDepartment)
                 ?.classes.map((cls) => (
-                  <option key={cls.classNumber} value={cls.classNumber}>
-                    {cls.classNumber}
+                  <option key={cls.course_number} value={cls.course_number}>
+                    {cls.course_number}
                   </option>
                 ))}
             </select>
@@ -143,12 +164,12 @@ function ClassSelection() {
         <br />
         <label>
             Type:
-            <select value={selectedType} onChange={handleTypeChange}>
+            <select value={selectedType} onChange={handleTypeChange} disabled={!selectedClass}>
             <option value="">Select Type</option>
             <option value="exam">Exam</option>
             <option value="cheatsheet">Cheatsheet</option>
             <option value="notes">Notes</option>
-            <option value="outside source">Outside Source</option>
+            <option value="outside_source">Outside Source</option>
             </select>
         </label>
         <br />

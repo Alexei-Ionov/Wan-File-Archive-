@@ -4,19 +4,19 @@ const universityData = [
     departments: [
       {
         departmentName: 'CS',
-        classes: ['162', '186', '61A', '61B', '61C'].map(classNumber => ({ classNumber }))
+        classes: ['162', '186', '61A', '61B', '61C'].map(course_number => ({ course_number }))
       },
       {
         departmentName: 'DATA',
-        classes: ['8', '100'].map(classNumber => ({ classNumber }))
+        classes: ['8', '100'].map(course_number => ({ course_number }))
       },
       {
         departmentName: 'ME',
-        classes: ['40', '108'].map(classNumber => ({ classNumber }))
+        classes: ['40', '108'].map(course_number => ({ course_number }))
       },
       {
         departmentName: 'E',
-        classes: ['7'].map(classNumber => ({ classNumber }))
+        classes: ['7'].map(course_number => ({ course_number }))
       }
     ]
   }
