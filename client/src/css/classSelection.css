@@ -1,0 +1,36 @@
+/* ClassSelection.css */
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+
+.form-container label {
+    flex: 1 1 calc(25% - 1em);
+    /* Adjust percentage and margin as needed */
+    margin-right: 1em;
+    margin-bottom: 1em;
+}
+
+.form-container label:last-child {
+    margin-right: 0;
+}
+
+.form-container select,
+.form-container input[type="file"] {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.5em;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+}
+
+.button-container button {
+    padding: 0.75em 1.5em;
+    font-size: 1em;
+}

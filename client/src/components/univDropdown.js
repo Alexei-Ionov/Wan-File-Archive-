@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import universityData from '../data/universityData';
 import { AuthContext } from './authContext';
-
+import '../css/classSelection.css';
 
 function ClassSelection() {
   const [selectedUniversity, setSelectedUniversity] = useState('');
@@ -13,7 +13,7 @@ function ClassSelection() {
   const [successMsg, setSuccessMsg] = useState('');
   const [file, setFile] = useState(null); // State to hold the selected file
   const location = useLocation();
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const isContributePage = location.pathname === '/contribute';
   const reset = () =>  { 
@@ -23,6 +23,7 @@ function ClassSelection() {
     setSelectedType('');
     setSelectedUniversity('');
   }
+
   const handleUniversityChange = (event) => {
     const university = event.target.value;
     setSelectedUniversity(university);
@@ -64,6 +65,7 @@ function ClassSelection() {
       isContributePage ? setErrMsg('Please login to contribute!') : setErrMsg('Please login to see content!');
       return;
     }
+
     try {
       if (isContributePage) {
         const formData = new FormData();
@@ -78,18 +80,15 @@ function ClassSelection() {
           body: formData,
           credentials: 'include',
         });
-        //reset input form
         reset();
 
-        //response will ALWAYS be send as message 
         const message = await response.text();
         if (!response.ok) {
           setErrMsg(message);
           console.log(message);
-          return
+          return;
         }
         setSuccessMsg(message);
-      
       } else {
         const params = new URLSearchParams({
           university: selectedUniversity,
@@ -103,7 +102,7 @@ function ClassSelection() {
           credentials: 'include',
         });
         reset();
-        // response can be message if we error'd in the backend or a json object representing the files metadata!
+
         if (!response.ok) {
           const message = await response.text();
           setErrMsg(message);
@@ -113,7 +112,6 @@ function ClassSelection() {
         const files = await response.json();
         console.log(files);
       }
-      
     } catch (error) {
       reset();
       console.error('Error:', error.message);
@@ -122,77 +120,74 @@ function ClassSelection() {
 
   return (
     <div>
-        {errMsg && <div style={{ color: 'red' }}>{errMsg}</div>}
-        {successMsg && <div style={{ color: 'green' }}>{successMsg}</div>}
-        <br></br>
-        <form onSubmit={handleSubmit}>
-        <label>
+      {errMsg && <div style={{ color: 'red' }}>{errMsg}</div>}
+      {successMsg && <div style={{ color: 'green' }}>{successMsg}</div>}
+      <br />
+      <form onSubmit={handleSubmit}>
+        <div className="form-container">
+          <label>
             University:
             <select value={selectedUniversity} onChange={handleUniversityChange}>
-            <option value="">Select University</option>
-            {universityData.map((uni) => (
+              <option value="">Select University</option>
+              {universityData.map((uni) => (
                 <option key={uni.university} value={uni.university}>
-                {uni.university}
+                  {uni.university}
                 </option>
-            ))}
+              ))}
             </select>
-        </label>
-        <br />
-        <label>
+          </label>
+          <label>
             Department:
             <select value={selectedDepartment} onChange={handleDepartmentChange} disabled={!selectedUniversity}>
-            <option value="">Select Department</option>
-            {selectedUniversity &&
-              universityData
-                .find((uni) => uni.university === selectedUniversity)
-                ?.departments.map((dep) => (
-                  <option key={dep.departmentName} value={dep.departmentName}>
-                    {dep.departmentName}
-                  </option>
-                ))}
+              <option value="">Select Department</option>
+              {selectedUniversity &&
+                universityData
+                  .find((uni) => uni.university === selectedUniversity)
+                  ?.departments.map((dep) => (
+                    <option key={dep.departmentName} value={dep.departmentName}>
+                      {dep.departmentName}
+                    </option>
+                  ))}
             </select>
-        </label>
-        <br />
-        <label>
+          </label>
+          <label>
             Class:
             <select value={selectedClass} onChange={handleClassChange} disabled={!selectedDepartment}>
-            <option value="">Select Class</option>
-            {selectedDepartment &&
-              universityData
-                .find((uni) => uni.university === selectedUniversity)
-                ?.departments.find((dep) => dep.departmentName === selectedDepartment)
-                ?.classes.map((cls) => (
-                  <option key={cls.course_number} value={cls.course_number}>
-                    {cls.course_number}
-                  </option>
-                ))}
+              <option value="">Select Class</option>
+              {selectedDepartment &&
+                universityData
+                  .find((uni) => uni.university === selectedUniversity)
+                  ?.departments.find((dep) => dep.departmentName === selectedDepartment)
+                  ?.classes.map((cls) => (
+                    <option key={cls.course_number} value={cls.course_number}>
+                      {cls.course_number}
+                    </option>
+                  ))}
             </select>
-        </label>
-        <br />
-        <label>
+          </label>
+          <label>
             Type:
             <select value={selectedType} onChange={handleTypeChange} disabled={!selectedClass}>
-            <option value="">Select Type</option>
-            <option value="exam">Exam</option>
-            <option value="cheatsheet">Cheatsheet</option>
-            <option value="notes">Notes</option>
-            <option value="outside_source">Outside Source</option>
+              <option value="">Select Type</option>
+              <option value="exam">Exam</option>
+              <option value="cheatsheet">Cheatsheet</option>
+              <option value="notes">Notes</option>
+              <option value="outside_source">Outside Source</option>
             </select>
-        </label>
-        <br />
-        {isContributePage && (
-            <div>
+          </label>
+          {isContributePage && (
             <label>
-                Upload File:
-                <input type="file" onChange={handleFileChange} />
+              Upload File:
+              <input type="file" onChange={handleFileChange} />
             </label>
-            <br />
-            </div>
-        )}
-        <button type="submit" disabled={!selectedUniversity || !selectedDepartment || !selectedClass || !selectedType}>
+          )}
+        </div>
+        <div className="button-container">
+          <button type="submit" disabled={!selectedUniversity || !selectedDepartment || !selectedClass || !selectedType}>
             {isContributePage ? 'Contribute' : 'Fetch Content'}
-        </button>
-        </form>
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
