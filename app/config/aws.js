@@ -1,4 +1,4 @@
-const { S3Client, DeleteObject, GetObjectCommand} = require('@aws-sdk/client-s3'); // AWS SDK v3
+const { S3Client, DeleteObjectCommand, GetObjectCommand} = require('@aws-sdk/client-s3'); // AWS SDK v3
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 
@@ -33,10 +33,11 @@ const deleteFile = async (fileKey) => {
             Bucket: process.env.AWS_S3_BUCKET_NAME,
             Key: fileKey,
         }
-        const command = new DeleteObject(params);
+        const command = new DeleteObjectCommand(params);
         const response = await s3Client.send(command);
         return response;
     } catch (err) { 
+        console.error("Error deleting file from S3:", err);
         throw new Error("error deleting file from s3");
     }
 }

@@ -32,7 +32,7 @@ const fileSchema = new mongoose.Schema({
   s3key: String,
   university: String, 
   department: String, 
-  class: String,
+  course_number: String,
   content_type: String,
   votes: { 
     upvotes: [Number], //list of user ids that upvoted the file
@@ -45,7 +45,7 @@ const classSchema = new mongoose.Schema({
 });
 
 const departmentSchema = new mongoose.Schema({
-  department: String,
+  departmentName: String,
   classes: [classSchema]
 });
 

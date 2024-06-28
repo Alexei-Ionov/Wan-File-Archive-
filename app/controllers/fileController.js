@@ -21,10 +21,6 @@ exports.uploadFile = async (req, res, next) => {
     const username = req.session.username; 
     const userID = req.session.userID;
     const { university, department, course_number, content_type } = req.body;
-    console.log(university);
-    console.log(department);
-    console.log(course_number);
-    console.log(content_type);
     /* first verify validity of user input*/
     try { 
         await this.verifyUniversityInputData(university, department, course_number, content_type);

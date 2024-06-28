@@ -154,36 +154,12 @@ exports.voteFile = async (fileid, vote, userID) => {
 };
 exports.verifyUniversityInputData = async (university, department, course_number) => { 
     try { 
-        console.log(`Verifying university: ${university}, department: ${department}, class: ${course_number}`);
-
-        // Query to check if the university, department, and class exist
         const exists = await Universities.findOne({
             university: university,
             'departments.departmentName': department,
+            'departments.classes.course_number': course_number
         });
-        console.log('exists:', exists);
         
-        const exists2 = await Universities.findOne({
-            university: university,
-            'departments.departmentName': department,
-            'departments.classes.class_number': course_number
-        });
-        console.log(exists2);
-        
-
-        // Query to check if the university exists
-        const univExists = await Universities.findOne({
-            university: university
-        });
-        console.log('univExists:', univExists);
-
-        // Query to check if the department exists in the specified university
-        const departmentExists = await Universities.findOne({
-            university: university,
-            'departments.departmentName': department
-        });
-        console.log('departmentExists:', departmentExists);
-
         if (!exists) {
             throw new Error(`${university} ${department} ${course_number} does not exist in our database`);
         }

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import universityData from '../data/universityData';
+import { AuthContext } from './authContext';
+
 
 function ClassSelection() {
   const [selectedUniversity, setSelectedUniversity] = useState('');
@@ -11,6 +13,7 @@ function ClassSelection() {
   const [successMsg, setSuccessMsg] = useState('');
   const [file, setFile] = useState(null); // State to hold the selected file
   const location = useLocation();
+  const {user} = useContext(AuthContext);
 
   const isContributePage = location.pathname === '/contribute';
   const reset = () =>  { 
@@ -53,10 +56,14 @@ function ClassSelection() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     setSuccessMsg('');
     setErrMsg('');
 
-    
+    if (!user) {
+      isContributePage ? setErrMsg('Please login to contribute!') : setErrMsg('Please login to see content!');
+      return;
+    }
     try {
       if (isContributePage) {
         const formData = new FormData();
