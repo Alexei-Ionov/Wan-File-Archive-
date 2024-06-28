@@ -10,20 +10,16 @@ const { upload } = require('../config/aws');
 router.post("/signup", userController.createUser);
 
 /* <--------- LOGIN ---------> */
-// router.get("/login", userController.loginPage);
 router.post("/login", userController.loginUser);
 
 /* <--------- LOGOUT ---------> */
 router.post("/logout", authenticate, userController.logout);
 
-/* <--------- HOME ---------> */
-// router.get("/home", userController.homePage);
-router.post("/home", fileController.loadFilesMetadata);
+/* <--------- VIEW FILE CONTENT ---------> */
+router.get("/content/file", authenticate, fileController.getFileContents);
 
-
-/* <--------- VIEW FILE ---------> */
-router.get("/getFile", authenticate, fileController.getFileContents);
-
+/* <--------- GET FILE METADATA ---------> */
+router.get("/content", authenticate, fileController.loadFilesMetadata);
 
 /* <--------- PROFILE ---------> */
 router.get("/profile", authenticate, userController.viewProfile);
@@ -35,7 +31,7 @@ router.post("/contribute", authenticate, upload.single('file'), fileController.u
 
 
 /* <--------- VOTE FILE ---------> */
-router.post("/home/vote", fileController.voteFile);
+router.post("/content/vote", authenticate, fileController.voteFile);
 // router.post("/home/vote", authenticate, fileController.voteFile);
 
 

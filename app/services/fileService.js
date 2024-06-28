@@ -1,6 +1,7 @@
 const fileModel = require('../models/fileModel');
 const { v4: uuidv4 } = require('uuid');
 
+
 exports.uploadFileMetadata = async (userID, university, department, course_number, username, content_type, file_name, file_size, s3key) => {
     try { 
         // university, department, course_number, username, s3key, file_name, file_size, content_type
@@ -39,3 +40,11 @@ exports.voteFile = async (fileid, vote, userID) => {
         throw err;
     }
 };  
+
+exports.verifyUniversityInputData = async (university, department, course_number) => { 
+    try { 
+        await fileModel.verifyUniversityInputData(university, department, course_number);
+    } catch (err) { 
+        throw err;
+    }
+};

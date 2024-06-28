@@ -21,6 +21,8 @@ function Login() {
         navigate('/profile');
     } catch (err) { 
         console.log(err.message);
+        setErrorMessage(err.message);
+        
     }
     
   };

@@ -11,41 +11,37 @@ const { deleteFile, getFile } = require('../config/aws');
     - file name (optional : default will be the name of the actual file??)
     - Content type (Practice Exam, Cheatsheet, Notes)
     */
+
 exports.uploadFile = async (req, res, next) => { 
     // if we successfully uploaded file to s3
     if (!req.file) { 
-        res.status(500).send("<h1>Failed to upload file </h1>");
+        res.status(500).send("Failed to upload file");
         return;
     }
-    // const username = req.session.username; TURNED OFF FOR EASY API DEV
-    const username = "KoolKaa"
+    const username = req.session.username; 
     const userID = req.session.userID;
-    // const { university, department, course_number, content_type } = req.body;
-    const university = "Berkeley";
-    const department = "CS";
-    const course_number = 162;
-    const content_type = "exam";
+    const { university, department, course_number, content_type } = req.body;
+    /* first verify validity of user input*/
+    try { 
+        await this.verifyUniversityInputData(university, department, course_number, content_type);
+    } catch (err) {
+        // delete file from s3
+        await deleteFile(req.file.key);
+        next(err);
+        return;
+    }
+
     try { 
         await fileService.uploadFileMetadata(userID, university, department, course_number, username, content_type, req.file.originalname, req.file.size, req.file.key);
-        res.status(201).send("<h1>File Uploaded Successfully!!</h1>");
+        return res.status(201).send("File Uploaded Successfully!!");
     } catch (err) {
         /* IN CASE WE FAIL ON UPLOADING FILE METADATA TO MONGO, we need to rollback upload to s3!*/
-        const deleteResponse = await deleteFile(req.file.key);
-        console.log(deleteResponse);
+        await deleteFile(req.file.key);
         next(err);
     }    
 };
 
-exports.loadFilesMetadata = async (req, res, next) => { 
-    const { university, department, course_number, content_type } = req.body;
-    const page_number = req.query.page_number;
-    try { 
-        const files = await fileService.loadFilesMetadata(university, department, course_number, content_type, page_number);
-        res.status(201).json(files);
-    } catch (err) { 
-        next(err);
-    }
-};
+
 
 exports.voteFile = async (req, res, next) => { 
     const { fileid, vote } = req.body;
@@ -71,6 +67,25 @@ exports.voteFile = async (req, res, next) => {
 
 /* <------------- GET REQUESTS -------------> */
 
+
+exports.loadFilesMetadata = async (req, res, next) => { 
+    const { university, department, course_number, content_type } = req.query;
+    /* first verify validity of user input*/
+    try { 
+        await this.verifyUniversityInputData(university, department, course_number, content_type);
+    } catch (err) {
+        next(err);
+        return;
+    }
+    const page_number = req.query.page_number;
+    try { 
+        const files = await fileService.loadFilesMetadata(university, department, course_number, content_type, page_number);
+        return res.status(201).json(files);
+    } catch (err) { 
+        next(err);
+    }
+};
+
 exports.getFileContents = async (req, res, next) => {
     const { s3key } = req.query;
     console.log(s3key);
@@ -90,4 +105,20 @@ exports.getFileContents = async (req, res, next) => {
         next(err);
     }
     
-}
+};
+
+exports.verifyUniversityInputData = async (university, department, course_number, content_type) => { 
+    /* first check content type since we are not storing this in our db */
+    if (content_type !== 'exam' || content_type !== 'notes' || content_type !== 'cheatsheet' || content_type !== 'outside_source') { 
+        res.status(401).send("Invalid content_type");
+        return;
+    }
+    /* validate input data ... make sure no one is writing their own js lol in their browser */
+    try { 
+        await fileService.verifyUniversityInputData(university, department, course_number);
+    } catch (err) {
+        //err alr contains err msg so we can just propograte to our error handler here
+        next(err);
+        return;
+    }
+};

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
-
+const universityData = require('../data/universityData')
 // Load environment variables from .env file
 require('dotenv').config();
 console.log("connecting to mongoose");
@@ -40,9 +40,21 @@ const fileSchema = new mongoose.Schema({
   }
 });
 
+const classSchema = new mongoose.Schema({
+  course_number: String
+});
+
+const departmentSchema = new mongoose.Schema({
+  department: String,
+  classes: [classSchema]
+});
+
+const universitySchema = new mongoose.Schema({
+  university: String,
+  departments: [departmentSchema]
+});
+const Universities = mongoose.model('Universities', universitySchema);
 const Files = mongoose.model('Files', fileSchema);
-
-
 const deleteAllDocs = async () => { 
   try { 
     Files.deleteMany({});
@@ -52,6 +64,27 @@ const deleteAllDocs = async () => {
     throw err;
   }
 }
+const addUniv = async (university, departments) => { 
+  const newUniv = new Universities({
+    university: `${university}`,
+    departments: departments
+  });
+  await newUniv.save();
+};
+
+const setupUnivDB = async () => { 
+  for (let i = 0; i < universityData.length; i++) { 
+    const { university, departments } = universityData[i];
+    await addUniv(university, departments);
+  }
+};
+
+// Call the setup function
+setupUnivDB().then(() => {
+  console.log('University data setup completed');
+}).catch(err => {
+  console.error('Error setting up university data:', err);
+});
 
 // Close the connection when the application is shutting down
 process.on('SIGINT', async () => {
@@ -67,4 +100,5 @@ process.on('SIGINT', async () => {
 module.exports = {
   sessionStore,
   Files,
+  Universities,
 };

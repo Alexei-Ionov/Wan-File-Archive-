@@ -1,4 +1,4 @@
-const { Files } = require('../config/mongo');
+const { Files, Universities } = require('../config/mongo');
 const mongoose = require('mongoose');
 const userModel = require('./userModel');
 const page_size = 5;
@@ -22,7 +22,6 @@ exports.uploadFileMetadata = async (userID, university, department, course_numbe
         throw err;
     }
 };
-
 exports.loadFilesMetadata = async (university, department, course_number, content_type, page_number) => {
     try { 
         const files = await Files.find({
@@ -158,3 +157,24 @@ exports.voteFile = async (fileid, vote, userID) => {
     }
 };
 
+exports.verifyUniversityInputData = async (university, department, course_number) => { 
+    try { 
+        const exists = await Universities.find({
+            university: university,
+            departments: {
+                $elemMatch: {
+                    department: department,
+                classes: {
+                    $elemMatch: { 
+                        classNumber: course_number  
+                    }   
+                }
+            }}
+        });
+        if (!exists) {
+            throw new Error(`${university} ${department}${course_number} does not exist in our database`);
+        }
+    } catch (err) { 
+        throw err;
+    }
+};

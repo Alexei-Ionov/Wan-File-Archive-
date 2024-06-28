@@ -1,12 +1,12 @@
 import ClassSelection from '../components/univDropdown';
 
-function Contribute() { 
+function Content() {
     return (
         <div>
-            <h1>Contribute</h1>
+            <h1>Content</h1>
             <ClassSelection/>
         </div>
     );
 };
 
-export default Contribute;
+export default Content;

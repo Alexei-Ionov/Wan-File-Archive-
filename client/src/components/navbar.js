@@ -9,6 +9,7 @@ const NavBar = () => {
         <nav>
             <ul>
                 <li><Link to="/">Home</Link></li>
+                <li><Link to="/content">Content</Link></li>
                 <li><Link to="/contribute">Contribute</Link></li>
                 <li>
                     {user ? (<Link to="/profile">Profile</Link>) : (<Link to="/login">Login</Link>)}

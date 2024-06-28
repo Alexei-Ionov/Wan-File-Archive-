@@ -6,7 +6,7 @@ const AuthProvider = ({children}) => {
     const login = async (loginInfo) => { 
         /* loginInfo -> {email: ***, password: ***} */
         const {email, password} = loginInfo;
-    
+        
         try { 
             const response = await fetch('http://localhost:8000/login', { 
                 method: 'POST',
@@ -24,6 +24,7 @@ const AuthProvider = ({children}) => {
             return '';
         } catch (err) {
             console.log(err.message);
+            throw new Error("Failed to login");
         }
     };
     const logout = async () => { 

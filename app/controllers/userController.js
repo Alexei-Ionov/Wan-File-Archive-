@@ -28,7 +28,7 @@ exports.loginUser = async (req, res, next) =>  {
     }
     const { id, username } = await userService.login(email, password);
     /* set up session-related things */
-  
+    console.log("logged in user - backend");
     req.session.userID = id;
     req.session.username = username;
     req.session.email = email;
