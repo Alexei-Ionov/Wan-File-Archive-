@@ -1,4 +1,5 @@
 const userService = require("../services/userService");
+const fileController = require('./fileController');
 /* <------------ POST REQUESTS ----------->  */
 exports.createUser = async (req, res, next) => {
   const { username, email, password1, password2 } = req.body;
@@ -32,7 +33,7 @@ exports.loginUser = async (req, res, next) =>  {
     req.session.userID = id;
     req.session.username = username;
     req.session.email = email;
-    res.status(201).json({"username": username, "email": email});
+    res.status(201).json({"username": username, "email": email, "userID": id});
   } catch (err) {
     next(err);
   }
@@ -60,6 +61,27 @@ exports.logout = async (req, res, next) => {
 
 
 /* <------------ GET REQUESTS ----------->  */
+
+exports.viewProfile = async (req, res, next) => {    
+  const { ownerid } = req.query;
+  const userID = req.session.userID;
+  try { 
+    const userData = await userService.viewProfile(ownerid, userID);
+    const files = await fileController.loadFilesMetadataByOwner(ownerid, userID);
+    //need to return json response caintaing userData + files related to that user
+    const profile = {
+      'userData': userData,
+      'files': files,
+    }
+    return res.status(201).json(profile);
+  } catch (err) { 
+    next(err);
+  }
+};
+
+
+
+/* ADMIN */
 exports.getUsers = async (req, res, next) => {
   try {
     const users = await userService.getUsers();
@@ -67,15 +89,5 @@ exports.getUsers = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
-exports.viewProfile = async (req, res, next) => {    
-  try { 
-    const userID = req.session.userID;
-    const userData = await userService.viewProfile(userID);
-    return res.status(201).json(userData);
-  } catch (err) { 
-    next(err);
-  }
-  
 };
 

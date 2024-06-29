@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ClassSelection from '../components/ClassSelection';
 import FilesContainer from '../components/FilesContainer';
 function Content() {
-    const [files, setFiles] = useState([]);
+    const [files, setFiles] = useState(files);
     return (
         <div>
             <h1>Content</h1>

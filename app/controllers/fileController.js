@@ -69,7 +69,14 @@ exports.voteFile = async (req, res, next) => {
 };
 
 /* <------------- GET REQUESTS -------------> */
-
+exports.loadFilesMetadataByOwner = async (ownerid, userID) => { 
+    try { 
+        const files = await fileService.loadFilesMetadata(null, null, null, null, null, userID, ownerid);
+        return files;
+    } catch (err) {
+        throw err;
+    }
+};
 
 exports.loadFilesMetadata = async (req, res, next) => { 
     const { university, department, course_number, content_type } = req.query;

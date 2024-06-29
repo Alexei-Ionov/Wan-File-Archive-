@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../components/AuthContext'; 
 import { useNavigate } from 'react-router-dom';
-
+import { FilesContainer } from '../components/FilesContainer';
 function Profile() { 
     const { user, logout} = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
     const navigate = useNavigate(); // Get the history instance
+    const [userFiles, setUserFiles] = useState([]);
 
     /* 
     userData = {
@@ -39,8 +40,11 @@ function Profile() {
                 if (!response.ok) { 
                     throw new Error("Failed to fetch user profile");
                 }
-                const user = await response.json();
-                setUserData(user);
+                const profile = await response.json();
+                const userData = profile.userData;
+                const files = profile.files;
+                setUserData(userData);
+                setUserFiles(files);
             } catch (err) { 
                 console.log(err.message);
             }
@@ -64,6 +68,7 @@ function Profile() {
             <p>Username: {userData.username}</p>
             <p>Email: {userData.email}</p>
             <p>Rating: {userData.rating}</p>
+            < FilesContainer files={userFiles} />
             <br></br>
             <br></br>
             <button onClick={handleLogoutSubmit}>Logout</button>

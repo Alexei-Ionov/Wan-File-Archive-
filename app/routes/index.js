@@ -21,7 +21,7 @@ router.get("/content/file", authenticate, fileController.getFileContents);
 /* <--------- GET FILE METADATA ---------> */
 router.get("/content", authenticate, fileController.loadFilesMetadata);
 
-/* <--------- PROFILE ---------> */
+/* <--------- VIEW PROFILE (can be user profile or other person's profile) ---------> */
 router.get("/profile", authenticate, userController.viewProfile);
 
 /* <--------- CONTRIBUTE ---------> */

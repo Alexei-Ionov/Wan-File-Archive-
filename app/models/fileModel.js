@@ -22,17 +22,28 @@ exports.uploadFileMetadata = async (userID, university, department, course_numbe
         throw err;
     }
 };
-exports.loadFilesMetadata = async (university, department, course_number, content_type, page_number) => {
+exports.loadFilesMetadata = async (university, department, course_number, content_type, page_number, ownerid) => {
     try { 
-        const files = await Files.find({
-            university: {$eq: university},
-            department: {$eq: department},
-            course_number: {$eq: course_number},
-            content_type: {$eq: content_type},
-        })
-        .sort({rating: 1})
-        .skip((page_number - 1) * page_size)
-        .limit(page_size)
+        /* if we are searching for files by a specific user */
+        let files;
+        if (ownerid) {
+            files = await Files.find({
+                ownerid: {$eq: ownerid},
+            })
+            .sort({rating: 1})
+            .skip((page_number - 1) * page_size)
+            .limit(page_size)
+        } else {  //searching from the contents page 
+            files = await Files.find({
+                university: {$eq: university},
+                department: {$eq: department},
+                course_number: {$eq: course_number},
+                content_type: {$eq: content_type},
+            })
+            .sort({rating: 1})
+            .skip((page_number - 1) * page_size)
+            .limit(page_size)
+        }
         return files;
     } catch (err) { 
         console.log(err);

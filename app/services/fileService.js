@@ -12,9 +12,9 @@ exports.uploadFileMetadata = async (userID, university, department, course_numbe
     }
 };
 
-exports.loadFilesMetadata = async (university, department, course_number, content_type, page_number, userID) => {
+exports.loadFilesMetadata = async (university, department, course_number, content_type, page_number, userID, ownerID) => {
     try { 
-        const files = await fileModel.loadFilesMetadata(university, department, course_number, content_type, page_number);
+        const files = await fileModel.loadFilesMetadata(university, department, course_number, content_type, page_number, ownerID);
         let res = [];
         for (let i = 0; i < files.length; i++) { 
             const file = files[i];
@@ -24,6 +24,7 @@ exports.loadFilesMetadata = async (university, department, course_number, conten
             const downvoted = file.votes.downvotes.includes(userID);
             res.push({
                 owner: file.owner,
+                ownerid: file.ownerid,
                 s3key: file.s3key,
                 rating: file.rating,
                 filename:file.filename,
