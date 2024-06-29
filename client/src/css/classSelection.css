@@ -2,15 +2,17 @@
 .form-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 1em;
 }
 
 .form-container label {
-    flex: 1 1 calc(25% - 1em);
-    /* Adjust percentage and margin as needed */
+    flex: 1 1 15%;
+    /* Adjust the percentage to make the dropdowns smaller */
     margin-right: 1em;
     margin-bottom: 1em;
+    max-width: 15%;
+    /* Ensure dropdowns don't stretch too wide */
 }
 
 .form-container label:last-child {
@@ -20,7 +22,8 @@
 .form-container select,
 .form-container input[type="file"] {
     width: 100%;
-    padding: 0.5em;
+    padding: 0.25em;
+    /* Adjust padding for smaller boxes */
     margin-top: 0.5em;
 }
 
@@ -31,6 +34,7 @@
 }
 
 .button-container button {
-    padding: 0.75em 1.5em;
+    padding: 0.5em 1em;
+    /* Adjust padding for the button */
     font-size: 1em;
 }

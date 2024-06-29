@@ -1,0 +1,43 @@
+.file-metadata {
+    width: 300px;
+    height: 200px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.file-metadata h3.filename {
+    text-align: center;
+    margin: 0;
+    padding-top: 10px;
+}
+
+.file-metadata .uploaded-by {
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+}
+
+.file-metadata .rating {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.file-metadata .rating span {
+    margin-right: 5px;
+}
+
+.file-metadata .rating button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}

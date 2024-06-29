@@ -1,17 +1,17 @@
 import React, { useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import universityData from '../data/universityData';
-import { AuthContext } from './authContext';
+import { AuthContext } from './AuthContext';
 import '../css/classSelection.css';
 
-function ClassSelection() {
+function ClassSelection({ setFiles }) {
   const [selectedUniversity, setSelectedUniversity] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [file, setFile] = useState(null); // State to hold the selected file
+  const [file, setFile] = useState([]); // State to hold the selected file
   const location = useLocation();
   const { user } = useContext(AuthContext);
 
@@ -110,7 +110,8 @@ function ClassSelection() {
           return;
         }
         const files = await response.json();
-        console.log(files);
+        //files is an array of file objects
+        setFiles(files);
       }
     } catch (error) {
       reset();

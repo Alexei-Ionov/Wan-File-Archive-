@@ -12,18 +12,24 @@ exports.uploadFileMetadata = async (userID, university, department, course_numbe
     }
 };
 
-exports.loadFilesMetadata = async (university, department, course_number, content_type, page_number) => {
+exports.loadFilesMetadata = async (university, department, course_number, content_type, page_number, userID) => {
     try { 
         const files = await fileModel.loadFilesMetadata(university, department, course_number, content_type, page_number);
         let res = [];
         for (let i = 0; i < files.length; i++) { 
             const file = files[i];
+            //these two below are used for determining whether the user has already previously voted for this file
+            //if yes, we can highlight the upvote/downvote button!
+            const upvoted = file.votes.upvotes.includes(userID) 
+            const downvoted = file.votes.downvotes.includes(userID);
             res.push({
                 owner: file.owner,
                 s3key: file.s3key,
                 rating: file.rating,
                 filename:file.filename,
                 fileid: file.fileid,
+                upvoted: upvoted,
+                downvoted: downvoted,
             });
         }
         return res;

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { AuthContext } from '../components/authContext'; 
+import { AuthContext } from '../components/AuthContext'; 
 import { useNavigate } from 'react-router-dom';
 
 function Profile() { 

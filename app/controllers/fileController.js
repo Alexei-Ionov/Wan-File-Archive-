@@ -51,8 +51,7 @@ exports.voteFile = async (req, res, next) => {
     const { fileid, vote } = req.body;
 
     
-    const userID = 2;
-    // const userID = req.session.userID;
+    const userID = req.session.userID;
     try {   
         if (vote !== "0" && vote !== "1") { 
             throw new Error("Invalid vote");
@@ -61,7 +60,7 @@ exports.voteFile = async (req, res, next) => {
         if (response) { 
             res.status(201).send("Successfully voted for file!");
         } else { 
-            res.status(201).send("cant upvote / downvote same file");
+            res.status(201).send("Can't upvote / downvote same file");
         }
         
     } catch (err) { 
@@ -82,8 +81,9 @@ exports.loadFilesMetadata = async (req, res, next) => {
         return;
     }
     const page_number = req.query.page_number;
+    const userID = req.session.userID;
     try { 
-        const files = await fileService.loadFilesMetadata(university, department, course_number, content_type, page_number);
+        const files = await fileService.loadFilesMetadata(university, department, course_number, content_type, page_number, userID);
         return res.status(201).json(files);
     } catch (err) { 
         next(err);

@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/home';
 import Contribute from './pages/contribute';
 import Profile from './pages/profile';
-import NavBar from './components/navbar';
+import NavBar from './components/Navbar';
 import Login from './pages/login';
 import SignUp from './pages/signup';
 import Content from './pages/content';
-import { AuthProvider } from './components/authContext';
+import { AuthProvider } from './components/AuthContext';
 function App() {
   return (
     <AuthProvider>

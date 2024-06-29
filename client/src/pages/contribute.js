@@ -1,4 +1,4 @@
-import ClassSelection from '../components/univDropdown';
+import ClassSelection from '../components/ClassSelection';
 
 function Contribute() { 
     return (
