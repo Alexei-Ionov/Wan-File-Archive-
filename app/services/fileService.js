@@ -12,11 +12,11 @@ exports.uploadFileMetadata = async (userID, university, department, course_numbe
     }
 };
 
-exports.loadFilesMetadata = async (university, department, course_number, content_type, page_number, userID, ownerID) => {
-    try { 
-        const files = await fileModel.loadFilesMetadata(university, department, course_number, content_type, page_number, ownerID);
+exports.loadFilesMetadata = async (university, department, course_number, content_type, files_loaded, userID, ownerID) => {
+    try {                                            
+        const files = await fileModel.loadFilesMetadata(university, department, course_number, content_type, files_loaded, ownerID);
         let res = [];
-        for (let i = 0; i < files.length; i++) { 
+        for (let i = 0; i < files.length; i++) { files_loaded
             const file = files[i];
             //these two below are used for determining whether the user has already previously voted for this file
             //if yes, we can highlight the upvote/downvote button!

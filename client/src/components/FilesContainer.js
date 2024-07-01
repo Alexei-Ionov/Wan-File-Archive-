@@ -1,7 +1,7 @@
 import React from 'react';
 import FileMetadata from '../components/FileMetadata';
 
-function FilesContainer({ files }) {
+function FilesContainer({ files, ownerRating, setOwnerRating }) {
   return (
     <div style={{
       display: 'flex',
@@ -11,7 +11,7 @@ function FilesContainer({ files }) {
       padding: '20px',
     }}>
       {files.map((file, index) => (
-        <FileMetadata key={index} file={file} />
+        <FileMetadata key={index} file={file} ownerRating={ownerRating} setOwnerRating={setOwnerRating}/>
       ))}
     </div>
   );

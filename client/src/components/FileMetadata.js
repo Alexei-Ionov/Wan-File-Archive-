@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
-function FileMetadata({ file }) {
-  const [upvoteButtonClicked, setUpvoteButton] = useState(false);
-  const [downvoteButtonClicked, setDownvoteButton] = useState(false);
+function FileMetadata({ file, ownerRating, setOwnerRating }) {
+  const [upvoteButtonClicked, setUpvoteButton] = useState(file.upvoted);
+  const [downvoteButtonClicked, setDownvoteButton] = useState(file.downvoted);
   const [msg, setMsg] = useState('');
   const [fileRating, setfileRating] = useState(file.rating);
   const handleUpvote = () => {
@@ -17,6 +17,11 @@ function FileMetadata({ file }) {
     }
     setUpvoteButton(true);
     setfileRating(fileRating + 1);
+    /* depending on the context - if profile viewing then exists, else for regular content viewing does not exist */
+    if (setOwnerRating) {
+      setOwnerRating(ownerRating + 1);
+    }
+    
     try { 
       fetch('http://localhost:8000/content/vote', {
         method: 'POST',
@@ -46,6 +51,10 @@ function FileMetadata({ file }) {
     }
     setDownvoteButton(true);
     setfileRating(fileRating - 1);
+    /* depending on the context - if profile viewing then exists, else for regular content viewing does not exist */
+    if (setOwnerRating) {
+      setOwnerRating(ownerRating - 1);
+    }
     try { 
       fetch('http://localhost:8000/content/vote', {
         method: 'POST',

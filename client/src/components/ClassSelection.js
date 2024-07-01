@@ -4,7 +4,7 @@ import universityData from '../data/universityData';
 import { AuthContext } from './AuthContext';
 import '../css/classSelection.css';
 
-function ClassSelection({ setFiles }) {
+function ClassSelection({ setFiles, pageNumber}) {
   const [selectedUniversity, setSelectedUniversity] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
@@ -74,6 +74,7 @@ function ClassSelection({ setFiles }) {
         formData.append('department', selectedDepartment);
         formData.append('course_number', selectedClass);
         formData.append('content_type', selectedType);
+        formData.append('page_number', pageNumber);
 
         const response = await fetch('http://localhost:8000/contribute', {
           method: 'POST',

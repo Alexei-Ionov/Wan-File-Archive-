@@ -64,22 +64,24 @@ exports.logout = async (req, res, next) => {
 
 exports.viewProfile = async (req, res, next) => {    
   const { ownerid } = req.query;
-  const userID = req.session.userID;
   try { 
-    const userData = await userService.viewProfile(ownerid, userID);
-    const files = await fileController.loadFilesMetadataByOwner(ownerid, userID);
-    //need to return json response caintaing userData + files related to that user
-    const profile = {
-      'userData': userData,
-      'files': files,
-    }
-    return res.status(201).json(profile);
+    const userData = await userService.viewProfile(ownerid);
+    return res.status(201).json(userData);
   } catch (err) { 
     next(err);
   }
 };
 
-
+exports.viewProfileContent = async (req, res, next) => {    
+  const { ownerid, files_loaded} = req.query;
+  const userID = req.session.userID;
+  try { 
+    const files = await fileController.loadFilesMetadataByOwner(ownerid, userID, files_loaded);
+    return res.status(201).json(files);
+  } catch (err) { 
+    next(err);
+  }
+};
 
 /* ADMIN */
 exports.getUsers = async (req, res, next) => {
