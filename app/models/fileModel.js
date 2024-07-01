@@ -1,7 +1,7 @@
 const { Files, Universities } = require('../config/mongo');
 const mongoose = require('mongoose');
 const userModel = require('./userModel');
-const page_size = 5;
+const maxLoadSize = 100;
 exports.uploadFileMetadata = async (userID, university, department, course_number, username, s3key, file_name, file_size, content_type, fileID) => {
     try { 
         const fileMetadata = new Files({
@@ -22,7 +22,7 @@ exports.uploadFileMetadata = async (userID, university, department, course_numbe
         throw err;
     }
 };
-exports.loadFilesMetadata = async (university, department, course_number, content_type, files_loaded, ownerID) => {
+exports.loadFilesMetadata = async (university, department, course_number, content_type, ownerID) => {
     
     try { 
         /* if we are searching for files by a specific user */
@@ -32,8 +32,7 @@ exports.loadFilesMetadata = async (university, department, course_number, conten
                 ownerid: {$eq: ownerID},
             })
             .sort({rating: -1})
-            .skip(files_loaded)
-            .limit(page_size)
+            .limit(maxLoadSize)
         } else {  //searching from the contents page 
             files = await Files.find({
                 university: {$eq: university},
@@ -42,8 +41,7 @@ exports.loadFilesMetadata = async (university, department, course_number, conten
                 content_type: {$eq: content_type},
             })
             .sort({rating: -1})
-            .skip(files_loaded)
-            .limit(page_size)
+            .limit(maxLoadSize)
         }
         return files;
     } catch (err) { 

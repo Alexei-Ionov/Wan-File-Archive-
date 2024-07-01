@@ -9,7 +9,7 @@ function Content() {
             <h1>Content</h1>
             <ClassSelection setFiles={setFiles} pageNumber = {pageNumber}/>
             <br></br>
-            <FilesContainer files ={files}/>
+            <FilesContainer files = {files} ownerRating= {null} setOwnerRating = {null}/>
         </div>
     );
 };

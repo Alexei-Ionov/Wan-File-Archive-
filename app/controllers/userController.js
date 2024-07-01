@@ -73,10 +73,10 @@ exports.viewProfile = async (req, res, next) => {
 };
 
 exports.viewProfileContent = async (req, res, next) => {    
-  const { ownerid, files_loaded} = req.query;
+  const { ownerid } = req.query;
   const userID = req.session.userID;
   try { 
-    const files = await fileController.loadFilesMetadataByOwner(ownerid, userID, files_loaded);
+    const files = await fileController.loadFilesMetadataByOwner(ownerid, userID);
     return res.status(201).json(files);
   } catch (err) { 
     next(err);

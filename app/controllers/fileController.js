@@ -69,9 +69,9 @@ exports.voteFile = async (req, res, next) => {
 };
 
 /* <------------- GET REQUESTS -------------> */
-exports.loadFilesMetadataByOwner = async (ownerid, userID, files_loaded) => { 
+exports.loadFilesMetadataByOwner = async (ownerid, userID) => { 
     try { 
-        const files = await fileService.loadFilesMetadata(null, null, null, null, files_loaded, userID, ownerid);
+        const files = await fileService.loadFilesMetadata(null, null, null, null, userID, ownerid);
         return files;
     } catch (err) {
         throw err;
@@ -79,7 +79,7 @@ exports.loadFilesMetadataByOwner = async (ownerid, userID, files_loaded) => {
 };
 
 exports.loadFilesMetadata = async (req, res, next) => { 
-    const { university, department, course_number, content_type, page_number} = req.query;
+    const { university, department, course_number, content_type } = req.query;
     /* first verify validity of user input*/
     try { 
         await this.verifyUniversityInputData(university, department, course_number, content_type);
@@ -89,7 +89,7 @@ exports.loadFilesMetadata = async (req, res, next) => {
     }
     const userID = req.session.userID;
     try {                                                  
-        const files = await fileService.loadFilesMetadata(university, department, course_number, content_type, page_number, userID, null);
+        const files = await fileService.loadFilesMetadata(university, department, course_number, content_type, userID, null);
         return res.status(201).json(files);
     } catch (err) { 
         next(err);

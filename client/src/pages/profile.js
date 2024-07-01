@@ -7,7 +7,6 @@ function Profile() {
     const [userData, setUserData] = useState(null);
     const navigate = useNavigate(); // Get the history instance
     const [userFiles, setUserFiles] = useState([]);
-    const [filesLoaded, setFilesLoaded] = useState(0); 
     const [loadingFiles, setLoadingFiles] = useState(false);
     const [viewFilesMsg, setViewFilesMsg] = useState("");
     const [userRating, setUserRating] = useState(0);
@@ -51,7 +50,6 @@ function Profile() {
         setViewFilesMsg("");
         try { 
             const params = new URLSearchParams({
-                files_loaded: `${filesLoaded}`,
                 ownerid: `${user.userID}`
             })
             const response = await fetch(`http://localhost:8000/profile/content?${params.toString()}`, { 
@@ -65,8 +63,9 @@ function Profile() {
             const reqFiles = await response.json();
             setLoadingFiles(false);
             if (reqFiles.length) { //there are more files to view
-                setUserFiles(userFiles.concat(reqFiles));
-                setFilesLoaded(filesLoaded + reqFiles.length);
+                setUserFiles(reqFiles);
+                // setUserFiles(userFiles.concat(reqFiles));
+                // setFilesLoaded(filesLoaded + reqFiles.length);
             } else { 
                 setViewFilesMsg("No more files to view as of yet!");
                 console.log("no more files to view!");
@@ -84,7 +83,7 @@ function Profile() {
         if (user) { 
             fetchUserProfile();
         }
-    }, []);
+    }, [user]);
     if (!userData) { 
         return (
             <div>
@@ -102,9 +101,9 @@ function Profile() {
             <p>Rating: {userRating}</p>
             < FilesContainer files={userFiles} ownerRating={userRating} setOwnerRating={setUserRating}/>
             <br></br>
-            <button onClick={() => {
+            {/* <button onClick={() => {
                 fetchUserFiles();
-            }}>View More Results</button>
+            }}>View More Results</button> */}
             <br></br>
             {viewFilesMsg && <p>{viewFilesMsg}</p>}
             {loadingFiles && <p>Loading files...</p>}
