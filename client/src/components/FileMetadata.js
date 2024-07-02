@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import '../css/fileMetadata.css';
 
 function FileMetadata({ file, ownerRating, setOwnerRating }) {
   const [upvoteButtonClicked, setUpvoteButton] = useState(file.upvoted);
@@ -40,13 +42,11 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
         body: JSON.stringify({ fileid: file.fileid, vote: reqVote }),
         credentials: 'include',
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        setMsg(data.msg); // Update message state based on server response
-      } else {
-        throw new Error('Failed to vote.');
+      if (!response.ok) {
+        throw new Error("Failed to vote");
       }
+      const data = await response.text();
+      setMsg(data.msg); // Update message state based on server response
     } catch (err) {
       console.error(err.message);
       setMsg(err.message);
@@ -92,12 +92,14 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
             }}>
               <FontAwesomeIcon icon={faArrowDown} />
             </button>
+
+          
             <div style={{ color: 'gray', position: 'absolute', top: '20px', left: '10px' }}>{fileRating}</div>
           </div>
           <h3 style={{ textAlign: 'center', margin: '0', position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)' }}>{file.filename}</h3>
-          <div style={{ position: 'absolute', bottom: '10px', left: '20px', color: 'gray', fontStyle: 'italic' }}>
-            Uploaded by {file.owner}
-          </div>
+           <Link to={`/viewProfile/${file.ownerid}`} className="link-style">
+          Uploaded by {file.owner}
+          </Link>
         </React.Fragment>
       }
     </div>

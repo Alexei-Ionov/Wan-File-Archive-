@@ -53,7 +53,7 @@ exports.voteFile = async (req, res, next) => {
     
     const userID = req.session.userID;
     try {   
-        if (vote !== "0" && vote !== "1") { 
+        if (vote !== "-1" && vote !== "1") { 
             throw new Error("Invalid vote");
         }
         const response = await fileService.voteFile(fileid, vote, userID);

@@ -11,7 +11,7 @@
     position: relative;
 }
 
-.file-metadata h3.filename {
+.file-metadata a.filename {
     text-align: center;
     margin: 0;
     padding-top: 10px;
@@ -40,4 +40,22 @@
     border: none;
     cursor: pointer;
     font-size: 16px;
+}
+
+.link-style {
+    position: absolute;
+    bottom: 10px;
+    left: 80px;
+    color: gray;
+    font-style: italic;
+    text-decoration: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.link-style:hover {
+    color: #C8A2C8;
+    background-color: transparent;
+
+    /* Change to the color you prefer for hover */
 }

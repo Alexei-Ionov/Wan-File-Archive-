@@ -65,9 +65,9 @@ exports.deleteUser = async (username) => {
   }
 };
 
-exports.updateUserRating = async (userID, upvote) => {
+exports.updateUserRating = async (userID, vote) => {
   let query;
-  if (upvote === "1") {
+  if (vote === "1") {
     query = "UPDATE users SET rating = rating + 1 WHERE id = $1";
   } else {
     query = "UPDATE users SET rating = rating - 1 WHERE id = $1";
