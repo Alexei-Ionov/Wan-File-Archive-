@@ -40,6 +40,24 @@ const fileSchema = new mongoose.Schema({
   }
 });
 
+const commentSchema = new mongoose.Schema({
+  commentid: mongoose.Schema.Types.ObjectId,
+  rating: Number,
+  commenter_username: String,
+  timestamp: { type: Date, default: Date.now },
+  votes: {
+    upvotes: [Number],
+    downvotes: [Number],
+  },
+  nested_comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comments' }]
+});
+const fileCommentsSchema = new mongoose.Schema({
+  fileid: String,
+  comments: [commentSchema]
+});
+const Comments = mongoose.model('Comments', fileCommentsSchema);
+
+
 const classSchema = new mongoose.Schema({
   course_number: String
 });
@@ -101,4 +119,5 @@ module.exports = {
   sessionStore,
   Files,
   Universities,
+  Comments,
 };

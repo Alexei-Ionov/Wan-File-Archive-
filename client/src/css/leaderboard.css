@@ -15,6 +15,7 @@
 .leaderboard-slot {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 20px;
     background-color: #f0f0f0;
     border-radius: 8px;
@@ -24,6 +25,25 @@
 .position-icon {
     margin-right: 20px;
     font-size: 24px;
+    flex-shrink: 0;
+}
+
+.user-info {
+    display: flex;
+    /* Use flexbox for centering */
+    flex-direction: column;
+    /* Align children in a column */
+    align-items: center;
+    /* Center horizontally */
+    flex: 1;
+    /* Allow user-info to take up remaining space */
+}
+
+.user-info div {
+    display: flex;
+    /* Ensure the div containing the link is also a flex container */
+    align-items: center;
+    /* Center the content horizontally */
 }
 
 .user-info h3 {
@@ -36,4 +56,22 @@
     margin: 0;
     color: #888;
     font-size: 14px;
+}
+
+.leaderboard-link-style {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: gray;
+    font-style: italic;
+    text-decoration: none;
+    background-color: transparent;
+    cursor: pointer;
+    display: inline-block;
+    /* Ensure the link is treated as an inline element */
+}
+
+.leaderboard-link-style:hover {
+    color: #C8A2C8;
+    background-color: transparent;
 }

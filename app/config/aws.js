@@ -1,4 +1,4 @@
-const { S3Client, DeleteObjectCommand, GetObjectCommand} = require('@aws-sdk/client-s3'); // AWS SDK v3
+const { S3Client, DeleteObjectCommand, GetObjectCommand, HeadObjectCommand} = require('@aws-sdk/client-s3'); // AWS SDK v3
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 
@@ -42,20 +42,22 @@ const deleteFile = async (fileKey) => {
     }
 }
 
-const getFile = async (fileKey) => { 
-  try { 
-    const params = {
+const getFile = async (fileKey) => {
+  try {
+   
+    const getParams = {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: fileKey,
-    }
-    const command = new GetObjectCommand(params);
-    const response = await s3Client.send(command);
+    };
+
+    const getCommand = new GetObjectCommand(getParams);
+    const response = await s3Client.send(getCommand);
     return response;
-  } catch (err) { 
-      console.log(err.message);
-      throw new Error("error getting file from s3");
+  } catch (err) {
+    console.error('Error retrieving file from S3:', err);
+    throw new Error('Error getting file from S3');
   }
-}
+};
 
 module.exports = {
   upload,

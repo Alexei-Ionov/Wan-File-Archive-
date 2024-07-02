@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import FilesContainer from '../components/FilesContainer';
 function ViewUserProfile() { 
@@ -8,8 +8,6 @@ function ViewUserProfile() {
     const [loadingFiles, setLoadingFiles] = useState(false);
     const [viewFilesMsg, setViewFilesMsg] = useState("");
     const [userRating, setUserRating] = useState(0);
-
-
     const fetchUserData = async () => { 
         console.log('fetching user profile...');
         try { 

@@ -4,7 +4,7 @@ import universityData from '../data/universityData';
 import { AuthContext } from './AuthContext';
 import '../css/classSelection.css';
 
-function ClassSelection({ setFiles, pageNumber}) {
+function ClassSelection({ setFiles }) {
   const [selectedUniversity, setSelectedUniversity] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
@@ -17,11 +17,12 @@ function ClassSelection({ setFiles, pageNumber}) {
 
   const isContributePage = location.pathname === '/contribute';
   const reset = () =>  { 
-    setFile(null);
+    setFile([]);
     setSelectedClass('');
     setSelectedDepartment('');
     setSelectedType('');
     setSelectedUniversity('');
+    setErrMsg('');
   }
 
   const handleUniversityChange = (event) => {
@@ -74,7 +75,7 @@ function ClassSelection({ setFiles, pageNumber}) {
         formData.append('department', selectedDepartment);
         formData.append('course_number', selectedClass);
         formData.append('content_type', selectedType);
-        formData.append('page_number', pageNumber);
+
 
         const response = await fetch('http://localhost:8000/contribute', {
           method: 'POST',
@@ -98,7 +99,7 @@ function ClassSelection({ setFiles, pageNumber}) {
           content_type: selectedType,
         }).toString();
 
-        const response = await fetch(`http://localhost:8000/content?${params}`, {
+        const response = await fetch(`http://localhost:8000/content/metadata?${params}`, {
           method: 'GET',
           credentials: 'include',
         });

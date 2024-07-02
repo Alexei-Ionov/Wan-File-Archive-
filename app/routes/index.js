@@ -4,7 +4,7 @@ const userController = require("../controllers/userController");
 const authenticate = require('../middleware/authentication');
 const fileController = require('../controllers/fileController');
 const { upload } = require('../config/aws');
-
+const commentController = require('../controllers/commentController');
 /* <--------- ACCOUNT CREATION ---------> */
 // router.get("/signup", userController.signUpPage);
 router.post("/signup", userController.createUser);
@@ -16,10 +16,10 @@ router.post("/login", userController.loginUser);
 router.post("/logout", authenticate, userController.logout);
 
 /* <--------- VIEW FILE CONTENT ---------> */
-router.get("/content/file", authenticate, fileController.getFileContents);
+router.get("/content/view", authenticate, fileController.getFileContents);
 
 /* <--------- GET FILE METADATA ---------> */
-router.get("/content", authenticate, fileController.loadFilesMetadata);
+router.get("/content/metadata", authenticate, fileController.loadFilesMetadata);
 
 /* <--------- VIEW PROFILE (can be user profile or other person's profile) ---------> */
 router.get("/profile", authenticate, userController.viewProfile); //profile info
@@ -38,6 +38,8 @@ router.get("/leaderboard", userController.viewLeaderboard); //files for profile
 router.post("/content/vote", authenticate, fileController.voteFile);
 // router.post("/home/vote", authenticate, fileController.voteFile);
 
+/* <--------- COMMENTS ---------> */
+router.get("/content/comment", authenticate, commentController.viewComments); //files for profile
 
 
 /* <--------- ADMIN ---------> */

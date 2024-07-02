@@ -95,7 +95,7 @@ exports.getProfile = async (userID) => {
 
 exports.getLeaderboard = async () => { 
   try { 
-    const query =  'SELECT username, rating FROM users ORDER BY rating DESC LIMIT 10';
+    const query =  'SELECT id, username, rating FROM users ORDER BY rating DESC LIMIT 10';
     const res = await db.query(query, []);
     return res.rows;
   } catch (err) {

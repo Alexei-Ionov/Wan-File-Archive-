@@ -1,5 +1,7 @@
 const fileService = require('../services/fileService');
 const { deleteFile, getFile } = require('../config/aws');
+const mime = require('mime-types');
+const { Type } = require('@aws-sdk/client-s3');
 
 
 /* <------------- POST REQUESTS -------------> */
@@ -98,20 +100,31 @@ exports.loadFilesMetadata = async (req, res, next) => {
 
 exports.getFileContents = async (req, res, next) => {
     const { s3key } = req.query;
-    console.log(s3key);
-    try { 
+    
+    try {
         const file_data = await getFile(s3key);
-        res.setHeader('Content-Type', file_data.ContentType);
+        const type = mime.contentType(s3key) || 'application/octet-stream'
+        res.setHeader('Content-Type', type);
         res.setHeader('Content-Length', file_data.ContentLength);
         res.setHeader('ETag', file_data.ETag);
-        //pipe contents of file directly to response 
+        
+        // Set Content-Disposition to 'inline' for displaying in the browser
+        res.setHeader('Content-Disposition', 'inline');
+        
+        // Pipe contents of file directly to response
         file_data.Body.pipe(res);
+        
         // Handle errors during streaming
         file_data.Body.on('error', (err) => {
             console.error('Stream error:', err);
             res.status(500).send('Error streaming file');
         });
-    } catch (err) { 
+        
+        // End response after streaming is complete
+        file_data.Body.on('end', () => {
+            res.end();
+        });
+    } catch (err) {
         next(err);
     }
     
