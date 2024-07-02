@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import CommentContainer from './CommentContainer';
 import { Link } from 'react-router-dom';
 import '../css/fileMetadata.css';
 import Upvote from './Upvote';
 import Downvote from './Downvote';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpRightFromSquare  } from '@fortawesome/free-solid-svg-icons';
 function FileMetadata({ file, ownerRating, setOwnerRating }) {
   const [upvoteButtonClicked, setUpvoteButton] = useState(file.upvoted);
   const [downvoteButtonClicked, setDownvoteButton] = useState(file.downvoted);
@@ -120,7 +122,9 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
       setMsg(err.message);
     }
   };
-
+  useEffect(() => {
+    
+  }, [])
   return (
     <div style={{
       border: '1px solid #ccc',
@@ -150,8 +154,11 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
                 left: '50%',
                 transform: 'translateX(-50%)',
                 cursor: 'pointer' // Add cursor pointer for visual indication
-            }} onClick={viewFileContents}>{file.filename}
+            }} onClick={viewFileContents}>{file.filename}  {<FontAwesomeIcon icon={faUpRightFromSquare} />} 
           </div>
+
+
+
           {comments && <CommentContainer comments={comments} />}
           <Link to={`/viewProfile/${file.ownerid}`} className="link-style"> Uploaded by {file.owner}</Link>
         </React.Fragment>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../css/navbar.css'
 import { AuthContext } from './AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faEarthAmericas} from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const NavBar = () => { 
     const {user} = useContext(AuthContext);
@@ -11,7 +11,7 @@ const NavBar = () => {
         <nav>
             <ul>
                 <li><Link to="/">Home</Link></li>
-                <li><Link to="/leaderboard">Leaderboard {<FontAwesomeIcon icon={faEarthAmericas} />}</Link></li>
+                <li><Link to="/leaderboard">Leaderboard</Link></li>
                 <li><Link to="/content">Content</Link></li>
                 <li><Link to="/contribute">Contribute</Link></li>
                 <li>

@@ -53,6 +53,7 @@ const commentSchema = new mongoose.Schema({
 });
 const fileCommentsSchema = new mongoose.Schema({
   fileid: String,
+  number_of_comments: Number,
   comments: [commentSchema]
 });
 const Comments = mongoose.model('Comments', fileCommentsSchema);
