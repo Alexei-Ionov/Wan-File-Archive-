@@ -1,0 +1,39 @@
+.leaderboard-page {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.leaderboard-container {
+    display: grid;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.leaderboard-slot {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.position-icon {
+    margin-right: 20px;
+    font-size: 24px;
+}
+
+.user-info h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.user-info p {
+    margin: 0;
+    color: #888;
+    font-size: 14px;
+}

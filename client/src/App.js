@@ -7,6 +7,7 @@ import NavBar from './components/Navbar';
 import Login from './pages/login';
 import SignUp from './pages/signup';
 import Content from './pages/content';
+import Leaderboard from './pages/leaderboard';
 import { AuthProvider } from './components/AuthContext';
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/login" element={<Login/>}/>
             <Route path="/signup" element={<SignUp/>}/>
             <Route path="/content" element = {<Content/>}/>
+            <Route path="/leaderboard" element = {<Leaderboard/>}/>
             
           </Routes>
         </div>

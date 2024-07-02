@@ -49,3 +49,11 @@ exports.viewProfile = async (userID) => {
         throw err;
     }
 };
+
+exports.viewLeaderboard = async () => { 
+    try { 
+        return await userModel.getLeaderboard();
+    } catch (err) {
+        throw err;
+    }
+};

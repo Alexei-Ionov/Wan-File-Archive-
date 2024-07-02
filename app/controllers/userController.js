@@ -61,7 +61,14 @@ exports.logout = async (req, res, next) => {
 
 
 /* <------------ GET REQUESTS ----------->  */
-
+exports.viewLeaderboard = async (req, res, next) => { 
+  try {
+    const users = await userService.viewLeaderboard();
+    return res.status(201).json(users);
+  } catch (err) {
+    next(err);
+  }
+};
 exports.viewProfile = async (req, res, next) => {    
   const { ownerid } = req.query;
   try { 

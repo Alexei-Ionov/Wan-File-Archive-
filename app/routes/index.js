@@ -30,6 +30,9 @@ router.get("/profile/content", authenticate, userController.viewProfileContent);
 router.post("/contribute", authenticate, upload.single('file'), fileController.uploadFile);
 // router.get("/contribute", fileController.contributePage);
 
+/* <--------- VIEW LEADERBOARD ---------> */
+
+router.get("/leaderboard", userController.viewLeaderboard); //files for profile
 
 /* <--------- VOTE FILE ---------> */
 router.post("/content/vote", authenticate, fileController.voteFile);

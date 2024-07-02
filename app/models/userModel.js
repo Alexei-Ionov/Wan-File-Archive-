@@ -92,3 +92,13 @@ exports.getProfile = async (userID) => {
     throw err;
   }
 }
+
+exports.getLeaderboard = async () => { 
+  try { 
+    const query =  'SELECT username, rating FROM users ORDER BY rating DESC LIMIT 10';
+    const res = await db.query(query, []);
+    return res.rows;
+  } catch (err) {
+    throw err;
+  }
+};
