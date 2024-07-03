@@ -1,18 +1,18 @@
 import React, { useState, useEffect} from 'react';
-import CommentContainer from './CommentContainer';
 import { Link } from 'react-router-dom';
 import '../css/fileMetadata.css';
 import Upvote from './Upvote';
 import Downvote from './Downvote';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUpRightFromSquare  } from '@fortawesome/free-solid-svg-icons';
-function FileMetadata({ file, ownerRating, setOwnerRating }) {
+import { faUpRightFromSquare, faComment} from '@fortawesome/free-solid-svg-icons';
+function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading, activeFiles, setActiveFiles, index, activeCommentBoxes, setActiveCommentBoxes}) {
   const [upvoteButtonClicked, setUpvoteButton] = useState(file.upvoted);
   const [downvoteButtonClicked, setDownvoteButton] = useState(file.downvoted);
   const [msg, setMsg] = useState('');
   const [fileRating, setFileRating] = useState(file.rating);
   const [comments, setComments] = useState([]); //[] since FileComment will alwasy start as a an array of length 1 if the file has comments
-
+  const [commentCount, setCommentCount] = useState(0);
+  // const [commentLoading, setCommentLoading] = useState(false);
   const viewFileContents = async () => {
     try { 
       const response = await fetch(`http://localhost:8000/content/view?s3key=${file.s3key}`, {
@@ -25,14 +25,12 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
       const contentType = response.headers.get('Content-Type');
 
       if (contentType.startsWith('image')) {
-          console.log("INSIDE IMAGE");
           // Handle images
           const blob = await response.blob();
           const imageUrl = URL.createObjectURL(blob);
           // Display image in a new tab or modal
           window.open(imageUrl, '_blank');
       } else if (contentType === 'application/pdf') {
-          console.log("INSIDE application/pdf");
           // Handle PDF files
           const blob = await response.blob();
           const pdfUrl = URL.createObjectURL(blob);
@@ -41,15 +39,12 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
           window.open(pdfUrl, '_blank');
       } else if (contentType.startsWith('text')) {
           // Handle text files
-          console.log("INSIDE text");
           const text = await response.text();
           const textWindow = window.open();
           textWindow.document.write(`<pre>${text}</pre>`);
           textWindow.document.close();
       } else {
           // Handle other types, such as videos, audio, etc.
-          console.log("INSIDE OTHER");
-
           const blob = await response.blob();
           const fileUrl = URL.createObjectURL(blob);
           // Open file or handle as needed
@@ -61,15 +56,31 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
     }
   };
   const handleViewComments = async () => {
+    
+    if (commentCount === 0) {
+      return;
+    }
+    setCommentLoading(true);
     try { 
       const response = await fetch(`http://localhost:8000/content/comment?fileid=${file.fileid}`, {
         method: 'GET',
         credentials: 'include',
       })
       const FileComments = await response.json();
-      setComments(FileComments.comments); //the actual comments for the file represented as an array of comment objects
+      console.log(FileComments);
+      for (let i = 0; i < activeFiles.length; i++) {
+        if (i !== index) {
+          activeFiles[i] = []; //clear all other file comments
+        } else if (FileComments.length !== 0) {  //if there are contents
+          activeFiles[i] = FileComments[0].comments
+        }
+      }
+      setActiveFiles(activeFiles);
+      // setComments(FileComments.comments); //the actual comments for the file represented as an array of comment objects
     } catch (err) {
       console.log(err.message);
+    } finally { 
+      setCommentLoading(false);
     }
   };
 
@@ -123,7 +134,25 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
     }
   };
   useEffect(() => {
-    
+    const getCommentCount = async () => {
+      try { 
+        const response = await fetch(`http://localhost:8000/comment/count?fileid=${file.fileid}`, {
+          method: 'GET', 
+          credentials: 'include',
+        })
+        const comment = await response.json();
+        //either empty array or length 1 array with comment count in it 
+        if (comment.length > 1) { 
+          throw new Error("Somehow got more than one comment from the fileid. Probability of this happening is nearly 0.");
+        }
+        if (comment.length === 1) { 
+          setCommentCount(comment[0].number_of_comments);
+        }
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+    getCommentCount();
   }, [])
   return (
     <div style={{
@@ -131,7 +160,7 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
       backgroundColor: '#fff',
       padding: '20px',
       marginBottom: '20px',
-      width: '300px',
+      width: '400px',
       height: '50px',
       position: 'relative',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
@@ -156,10 +185,12 @@ function FileMetadata({ file, ownerRating, setOwnerRating }) {
                 cursor: 'pointer' // Add cursor pointer for visual indication
             }} onClick={viewFileContents}>{file.filename}  {<FontAwesomeIcon icon={faUpRightFromSquare} />} 
           </div>
-
-
-
-          {comments && <CommentContainer comments={comments} />}
+          <h5> {commentCount} Comments</h5>
+          <button onClick={()=> {
+            activeCommentBoxes[index] = true;
+            setActiveCommentBoxes(activeCommentBoxes);
+            handleViewComments();
+            }}>{<FontAwesomeIcon icon={faComment}/>}</button>
           <Link to={`/viewProfile/${file.ownerid}`} className="link-style"> Uploaded by {file.owner}</Link>
         </React.Fragment>
       }

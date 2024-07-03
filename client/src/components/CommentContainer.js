@@ -1,7 +1,7 @@
 //we are garunteed that comments will at least have a length of 1
 import Comment from './Comment';
 function CommentContainer({ comments }) {
-    if (comments.length ===1 && comments.nested_comments.length === 0) {
+    if (comments.length === 1 && comments.nested_comments.length === 0) {
         return <Comment comment={comments[0]}/>
     }
     /* as of right now comments object has no order to it goal is to first sort it at every level before we go to render the comments */

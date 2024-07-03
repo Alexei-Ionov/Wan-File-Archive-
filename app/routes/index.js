@@ -40,7 +40,7 @@ router.post("/content/vote", authenticate, fileController.voteFile);
 
 /* <--------- COMMENTS ---------> */
 router.get("/content/comment", authenticate, commentController.viewComments); //files for profile
-
+router.get("/comment/count", authenticate, commentController.getCommentCount);
 
 /* <--------- ADMIN ---------> */
 router.get("/users", userController.getUsers);

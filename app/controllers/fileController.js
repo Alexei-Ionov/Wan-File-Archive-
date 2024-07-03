@@ -1,8 +1,6 @@
 const fileService = require('../services/fileService');
 const { deleteFile, getFile } = require('../config/aws');
 const mime = require('mime-types');
-const { Type } = require('@aws-sdk/client-s3');
-
 
 /* <------------- POST REQUESTS -------------> */
 /* 
@@ -36,7 +34,9 @@ exports.uploadFile = async (req, res, next) => {
     }
 
     try { 
+
         await fileService.uploadFileMetadata(userID, university, department, course_number, username, content_type, req.file.originalname, req.file.size, req.file.key);
+
         return res.status(201).send("File Uploaded Successfully!!");
     } catch (err) {
         /* IN CASE WE FAIL ON UPLOADING FILE METADATA TO MONGO, we need to rollback upload to s3!*/

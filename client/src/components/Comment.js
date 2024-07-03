@@ -1,4 +1,4 @@
-
+import CommentBox from './CommentBox';
 /*
 each comment will have the following things: 
 1.) fileid    --> allows us to find the file which this comment belongs to
@@ -10,6 +10,7 @@ each comment will have the following things:
 function Comment({ comment }) {
     return (
         <div>
+            <CommentBox/>
             <h3>{comment.commentid}</h3>
             <h3>{comment.commenter_username}</h3>
             <h3>{comment.ranking}</h3>

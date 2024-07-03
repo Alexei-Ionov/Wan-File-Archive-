@@ -1,41 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import FileMetadata from '../components/FileMetadata';
-import { useAnimate, usePresence } from 'framer-motion';
-
-function FilesContainer({ files, ownerRating, setOwnerRating }) {
-  // const [isPresent, safeToRemove] = usePresence();
-  // const [scope, animate] = useAnimate();
-
-  // useEffect(() => {
-  //   const animateFiles = async () => {
-  //     if (isPresent) {
-  //       // Animate container enter
-  //       await animate(scope.current, { opacity: 1 });
-  //       for (let i = 0; i < files.length; i++) {
-  //         await animate(files[i].fileid.toString(), { opacity: [0,1] }, { duration: 1, delay: 1000 * i });
-  //       }
-  //       // Animate each FileMetadata component
-  //       // files.forEach((file, index) => {
-  //       //   animate(file.fileid.toString(), { opacity: 1 }, { duration: 0.5, delay: 0.2 * index });
-  //       // });
-  //     } else {
-  //       // Animate each FileMetadata component on exit
-  //       // files.forEach((file) => {
-  //       //   animate(file.fileid.toString(), { opacity: 0, x: -100 });
-  //       // });
-  //       for (let i = 0; i < files.length; i++) {
-  //         await animate(files[i].fileid.toString(), { opacity: 0 }, { duration: 0.5, delay: 0.2 * i });
-  //       }
-
-  //       // Animate container exit
-  //       await animate(scope.current, { opacity: 0 });
-  //       safeToRemove();
-  //     }
-  //   };
-
-  //   animateFiles();
-  // }, [isPresent]);
-
+import CommentContainer from './CommentContainer';
+import CommentBox from './CommentBox';
+function FilesContainer({ files, ownerRating, setOwnerRating, setCommentLoading}) {
+  /* active file is one where user has clicked to see the comments! */
+  const [activeFiles, setActiveFiles] = useState([]);
+  const [activeCommentBoxes, setActiveCommentBoxes] = useState([]);
+  /* garuntees that files is fully loaded */
+  useEffect(()=> {
+    if (files && files.length) {
+      const temp_files = new Array(files.length).fill(null).map(() => []);
+      const temp_comment = new Array(files.length).fill(null).map(() => false);
+      setActiveFiles(temp_files);
+      setActiveCommentBoxes(temp_comment);
+      console.log(activeCommentBoxes);
+    }
+  },[files]);
   return (
     <div  style={{
       display: 'flex',
@@ -44,14 +24,25 @@ function FilesContainer({ files, ownerRating, setOwnerRating }) {
       backgroundColor: '#f9f9f9',
       padding: '20px',
     }}>
-      {files.map((file) => (
-        <FileMetadata
-          key={file.fileid}
-          id={file.fileid.toString()} // Assign the fileid as a unique ID
-          file={file}
-          ownerRating={ownerRating}
-          setOwnerRating={setOwnerRating}
-        />
+      {files.map((file, index) => (
+        
+        <div key={file.fileid} style={{ marginBottom: '20px', width: '100%' }}>
+          <FileMetadata
+            file={file}
+            ownerRating={ownerRating}
+            setOwnerRating={setOwnerRating}
+            setCommentLoading={setCommentLoading}
+            activeFiles={activeFiles}
+            setActiveFiles={setActiveFiles}
+            index={index}
+            activeCommentBoxes={activeCommentBoxes}
+            setActiveCommentBoxes={setActiveCommentBoxes}
+          />
+          {activeCommentBoxes[index] && console.log("pass") && <CommentBox/>}
+          {activeFiles[index] && activeFiles[index].length !== 0  && (
+            <CommentContainer comments={activeFiles[index]} />
+          )}
+        </div>
       ))}
     </div>
   );

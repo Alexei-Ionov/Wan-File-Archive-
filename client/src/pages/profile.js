@@ -10,6 +10,7 @@ function Profile() {
     const [loadingFiles, setLoadingFiles] = useState(false);
     const [viewFilesMsg, setViewFilesMsg] = useState("");
     const [userRating, setUserRating] = useState(0);
+    const [commentLoading, setCommentLoading] = useState(false);
 
     const handleLogoutSubmit = async (event) => { 
         event.preventDefault();
@@ -99,7 +100,8 @@ function Profile() {
             <p>Username: {userData.username}</p>
             <p>Email: {userData.email}</p>
             <p>Rating: {userRating}</p>
-            < FilesContainer files={userFiles} ownerRating={userRating} setOwnerRating={setUserRating}/>
+            {commentLoading && <h3>Comment Loading...</h3>}
+            < FilesContainer files={userFiles} ownerRating={userRating} setOwnerRating={setUserRating} setCommentLoading={setCommentLoading}/>
             <br></br>
             {/* <button onClick={() => {
                 fetchUserFiles();
