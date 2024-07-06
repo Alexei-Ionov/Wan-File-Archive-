@@ -38,3 +38,49 @@ exports.getCommentCount = async (fileid) => {
         throw err;
     }
 };
+async function addNestedComment(comments, parentid, newComment) {
+    for (let comment of comments) {
+        if (comment.commentid === parentid) {
+            comment.nested_comments.push(newComment);
+            return true;
+        }
+        if (await addNestedComment(comment.nested_comments, parentid, newComment)) {
+            return true;
+        }
+    }
+    return false;
+};
+exports.addComment = async (fileid, parentid, comment, commenter_username, commentid) => {    
+    const newComment = {
+        comment: comment,
+        commentid: commentid,
+        rating: 0,
+        commenter_username: commenter_username, 
+        votes: {
+            upvotes: 0, 
+            downvotes: 0
+        },
+        nested_comments: [],
+    };
+    try { 
+        const file = await Comments.findOne({
+            fileid: {$eq: fileid},
+        })
+        //top level commment
+        if (parentid === -1) {
+            file.comments.push(newComment);
+        } else {
+            
+            if (!file) {
+                throw new Error("File not found when adding comment");
+            }
+            const found = await addNestedComment(file.comments, parentid, newComment);
+            if (!found) {
+                throw new Error("Failed to add new comment");
+            }
+        }
+        await file.save();
+    } catch (err) {
+        throw err;
+    }
+}

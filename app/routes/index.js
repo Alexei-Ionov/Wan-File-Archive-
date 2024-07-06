@@ -41,7 +41,7 @@ router.post("/content/vote", authenticate, fileController.voteFile);
 /* <--------- COMMENTS ---------> */
 router.get("/content/comment", authenticate, commentController.viewComments); //files for profile
 router.get("/comment/count", authenticate, commentController.getCommentCount);
-
+router.post("/content/add-comment", authenticate, commentController.addComment);
 /* <--------- ADMIN ---------> */
 router.get("/users", userController.getUsers);
 module.exports = router;

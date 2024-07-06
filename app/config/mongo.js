@@ -41,6 +41,7 @@ const fileSchema = new mongoose.Schema({
 });
 
 const commentSchema = new mongoose.Schema({
+  comment: String,
   commentid: mongoose.Schema.Types.ObjectId,
   rating: Number,
   commenter_username: String,

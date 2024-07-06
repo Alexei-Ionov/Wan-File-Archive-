@@ -1,15 +1,39 @@
 import React, { useState } from 'react';
 
-const CommentBox = () => {
+const CommentBox = ({ fileid, parentid, commenter_username }) => {
   const [comment, setComment] = useState('');
-
+  const [msg, setMsg] = useState('');
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
+   const handleSubmit = async () => { 
+        try { 
+            console.log(fileid);
+            console.log(parentid);
+            console.log(comment);
+            console.log(commenter_username);
+            const formData = new FormData();
+            formData.append('fileid', fileid);
+            formData.append('parentid', parentid);
+            formData.append('commenter_username', commenter_username);
+            formData.append('comment', comment);
+            const response = await fetch('http://localhost:8000/content/add-comment', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include',
+            });
+            const response_msg = await response.text();
+            setMsg(response_msg);
 
-  const handleSubmit = () => {
-    console.log("submitted!");
-  };
+        } catch (err) {
+            console.log(err.message);
+            return;
+        }
+    }
+
+  // const handleSubmit = () => {
+  //   console.log("submitted!");
+  // };
 
   return (
     <div style={styles.container}>
@@ -22,6 +46,7 @@ const CommentBox = () => {
       <button onClick={handleSubmit} style={styles.button}>
         Submit
       </button>
+      <h3>{msg}</h3>
     </div>
   );
 };
