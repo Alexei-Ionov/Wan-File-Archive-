@@ -178,3 +178,13 @@ exports.verifyUniversityInputData = async (university, department, course_number
         throw err;
     }
 };
+
+exports.deleteFileMetadata = async (fileid) => { 
+    try {
+        await Files.deleteOne({
+            fileid: {$eq: fileid},
+        });
+    } catch (err) {
+        throw err;
+    }
+}

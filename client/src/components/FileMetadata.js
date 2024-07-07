@@ -6,13 +6,14 @@ import Downvote from './Downvote';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpRightFromSquare, faComment} from '@fortawesome/free-solid-svg-icons';
 import CommentBox from './CommentBox';
-function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading, activeFiles, setActiveFiles, index}) {
+import CommentContainer from './CommentContainer';
+function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading }) {
   const [upvoteButtonClicked, setUpvoteButton] = useState(file.upvoted);
   const [downvoteButtonClicked, setDownvoteButton] = useState(file.downvoted);
-  const [msg, setMsg] = useState('');
   const [fileRating, setFileRating] = useState(file.rating);
   const [commentCount, setCommentCount] = useState(0);
   const [commentButton, setCommentButton] = useState(false);
+  const [comments, setComments] = useState([]);
   
   
   // const [commentLoading, setCommentLoading] = useState(false);
@@ -55,17 +56,11 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading, ac
       }
     } catch (err) {
       console.log(err.message);
-      setMsg(err.message);
     }
   };
   const handleViewComments = async () => {
     setCommentButton(!commentButton);
-    /* toggle off comments */
-    if (!commentButton) {
-      activeFiles[index] = [];
-      setActiveFiles(activeFiles);
-      return;
-    }
+   
 
     if (commentCount === 0) {
       return;
@@ -76,17 +71,9 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading, ac
         method: 'GET',
         credentials: 'include',
       })
-      const FileComments = await response.json();
-      console.log(FileComments);
-      for (let i = 0; i < activeFiles.length; i++) {
-        if (i !== index) {
-          activeFiles[i] = []; //clear all other file comments
-        } else if (FileComments.length !== 0) {  //if there are contents
-          activeFiles[i] = FileComments[0].comments
-        }
-      }
-      setActiveFiles(activeFiles);
-      // setComments(FileComments.comments); //the actual comments for the file represented as an array of comment objects
+      const fileComments = await response.json();
+      /* will be an array of comment objects or [] if none are present */
+      setComments(fileComments);
     } catch (err) {
       console.log(err.message);
     } finally { 
@@ -136,11 +123,8 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading, ac
       if (!response.ok) {
         throw new Error("Failed to vote");
       }
-      const data = await response.text();
-      setMsg(data.msg); // Update message state based on server response
     } catch (err) {
       console.error(err.message);
-      setMsg(err.message);
     }
   };
   useEffect(() => {
@@ -170,14 +154,12 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading, ac
       backgroundColor: '#fff',
       padding: '20px',
       marginBottom: '20px',
-      width: '400px',
-      height: '50px',
       position: 'relative',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       borderRadius: '8px',
     }}>
       {file &&
-        <React.Fragment>
+        <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Upvote handleVote={handleVote} upvoteButtonClicked={upvoteButtonClicked}/> 
             <Downvote handleVote={handleVote} downvoteButtonClicked={downvoteButtonClicked}/>
@@ -195,14 +177,15 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading, ac
                 cursor: 'pointer' // Add cursor pointer for visual indication
             }} onClick={viewFileContents}>{file.filename}  {<FontAwesomeIcon icon={faUpRightFromSquare} />} 
           </div>
+          <Link to={`/viewProfile/${file.ownerid}`} className="link-style"> Uploaded by {file.owner}</Link>
           <h5> {commentCount} Comments</h5>
           <button onClick={()=> {
 
             handleViewComments();
             }}>{<FontAwesomeIcon icon={faComment}/>}</button>
-          <Link to={`/viewProfile/${file.ownerid}`} className="link-style"> Uploaded by {file.owner}</Link>
-          {commentButton && <CommentBox fileid={file.fileid} parentid={-1} commenter_username={file.owner}/>}
-        </React.Fragment>
+          {commentButton && (<CommentBox fileid={file.fileid} parentid={-1} commenter_username={file.owner} setCommentCount={setCommentCount}/>)}
+          {commentButton && (<CommentContainer comments={comments} setCommentCount={setCommentCount} fileid={file.fileid}/>)}
+        </div>
       }
     </div>
   );

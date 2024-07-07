@@ -1,6 +1,5 @@
-import CommentBox from './CommentBox';
 import Comment from './Comment';
-function CommentContainer({ comments }) {
+function CommentContainer({ fileid, comments, setCommentCount }) {
     comments.sort((c1, c2) => c2.rating - c1.rating);
 
     return (
@@ -14,7 +13,7 @@ function CommentContainer({ comments }) {
             {/* <CommentBox/>
             <br></br> */}
             {comments.map((comment) => (
-                <Comment key={comment.commentid} comment={comment} level={0} fileid={comments.fileid} parentid={-1}/>
+                <Comment key={comment.commentid} comment={comment} level={0} fileid={fileid} parentid={-1} setCommentCount={setCommentCount}/>
             ))}
         </div>
     );

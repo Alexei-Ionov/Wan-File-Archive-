@@ -103,9 +103,6 @@ function Profile() {
             {commentLoading && <h3>Comment Loading...</h3>}
             < FilesContainer files={userFiles} ownerRating={userRating} setOwnerRating={setUserRating} setCommentLoading={setCommentLoading}/>
             <br></br>
-            {/* <button onClick={() => {
-                fetchUserFiles();
-            }}>View More Results</button> */}
             <br></br>
             {viewFilesMsg && <p>{viewFilesMsg}</p>}
             {loadingFiles && <p>Loading files...</p>}

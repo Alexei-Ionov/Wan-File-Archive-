@@ -1,6 +1,5 @@
-.file-metadata {
+.comment {
     width: 300px;
-    height: 200px;
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -11,19 +10,19 @@
     position: relative;
 }
 
-.file-metadata a.filename {
+.comment .filename {
     text-align: center;
     margin: 0;
     padding-top: 10px;
 }
 
-.file-metadata .uploaded-by {
+.comment .commenter {
     color: #999;
     font-size: 12px;
     text-align: center;
 }
 
-.file-metadata .rating {
+.comment .rating {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -31,18 +30,18 @@
     align-items: center;
 }
 
-.file-metadata .rating span {
+.comment .rating span {
     margin-right: 5px;
 }
 
-.file-metadata .rating button {
+.comment .rating button {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 16px;
 }
 
-.file-link-style {
+.comment-link-style {
     position: absolute;
     top: 10px;
     right: 80px;
@@ -53,9 +52,8 @@
     cursor: pointer;
 }
 
-.file-link-style:hover {
+.comment-link-style:hover {
     color: #C8A2C8;
     background-color: transparent;
-
     /* Change to the color you prefer for hover */
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CommentBox = ({ fileid, parentid, commenter_username }) => {
+const CommentBox = ({ fileid, parentid, commenter_username, setCommentCount }) => {
   const [comment, setComment] = useState('');
   const [msg, setMsg] = useState('');
   const handleCommentChange = (e) => {
@@ -8,26 +8,23 @@ const CommentBox = ({ fileid, parentid, commenter_username }) => {
   };
    const handleSubmit = async () => { 
         try { 
-            console.log(fileid);
-            console.log(parentid);
-            console.log(comment);
-            console.log(commenter_username);
-            const formData = new FormData();
-            formData.append('fileid', fileid);
-            formData.append('parentid', parentid);
-            formData.append('commenter_username', commenter_username);
-            formData.append('comment', comment);
             const response = await fetch('http://localhost:8000/content/add-comment', {
                 method: 'POST',
-                body: formData,
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({fileid: fileid, parentid: parentid, commenter_username: commenter_username, comment: comment}),
                 credentials: 'include',
             });
-            const response_msg = await response.text();
-            setMsg(response_msg);
-
+            const response_msg = await response.json();
+            if (response_msg && response_msg.success === 1) {
+              setCommentCount(prev => prev + 1);
+              setMsg("Comment added successfully!");
+            }
+            
         } catch (err) {
             console.log(err.message);
             return;
+        } finally {
+          setComment('');
         }
     }
 

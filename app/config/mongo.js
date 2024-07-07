@@ -42,7 +42,8 @@ const fileSchema = new mongoose.Schema({
 
 const commentSchema = new mongoose.Schema({
   comment: String,
-  commentid: mongoose.Schema.Types.ObjectId,
+  ownerid: Number,
+  commentid: { type: mongoose.Schema.Types.ObjectId },
   rating: Number,
   commenter_username: String,
   timestamp: { type: Date, default: Date.now },

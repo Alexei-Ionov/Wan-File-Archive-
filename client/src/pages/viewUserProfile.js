@@ -8,6 +8,8 @@ function ViewUserProfile() {
     const [loadingFiles, setLoadingFiles] = useState(false);
     const [viewFilesMsg, setViewFilesMsg] = useState("");
     const [userRating, setUserRating] = useState(0);
+    const [commentLoading, setCommentLoading] = useState(false);
+
     const fetchUserData = async () => { 
         console.log('fetching user profile...');
         try { 
@@ -81,8 +83,9 @@ function ViewUserProfile() {
             <h1>Profile</h1>
             <br></br>
             <p>Username: {userData.username}</p>
-            <p>Rating: {userRating}</p>
-            < FilesContainer files={userFiles} ownerRating={userRating} setOwnerRating={setUserRating}/>
+            <p>Rating: {userRating}</p>            
+            {commentLoading && <h3>Comment Loading...</h3>}
+            < FilesContainer files={userFiles} ownerRating={userRating} setOwnerRating={setUserRating} setCommentLoading={setCommentLoading}/>
             <br></br>
             {/* <button onClick={() => {
                 fetchUserFiles();
