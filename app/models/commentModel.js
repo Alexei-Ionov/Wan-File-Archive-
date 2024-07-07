@@ -51,11 +51,11 @@ async function addNestedComment(comments, parentid, newComment) {
     }
     return false;
 };
-exports.addComment = async (fileid, parentid, comment, commenter_username, ownerid) => {    
+exports.addComment = async (fileid, parentid, comment, commenter_username, ownerid, commentid) => {    
     const newComment = {
         comment: comment,
         ownerid: ownerid,
-        commentid: new mongoose.Types.ObjectId(),
+        commentid: commentid,
         rating: 0,
         commenter_username: commenter_username, 
         votes: {
@@ -89,10 +89,8 @@ exports.addComment = async (fileid, parentid, comment, commenter_username, owner
 }
 
 async function voteComment(comments, commentid, vote, userID) {
-    console.log(commentid);
     for (let comment of comments) {
         if (comment.commentid === commentid) {
-            console.log("PASS");
             if ((vote === "1" && comment.votes.upvotes.includes(userID)) || (vote === "-1" && comment.votes.downvotes.includes(userID))) {
                 return true;
             }
@@ -120,8 +118,7 @@ async function voteComment(comments, commentid, vote, userID) {
     }
     return false;
 };
-exports.voteComment = async(fileid, commentIdString, vote, userID) => { 
-    const commentid = mongoose.Types.ObjectId(commentIdString);
+exports.voteComment = async(fileid, commentid, vote, userID) => { 
     const session = await mongoose.startSession();
     session.startTransaction();
     try { 

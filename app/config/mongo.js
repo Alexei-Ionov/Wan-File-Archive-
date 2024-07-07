@@ -43,7 +43,7 @@ const fileSchema = new mongoose.Schema({
 const commentSchema = new mongoose.Schema({
   comment: String,
   ownerid: Number,
-  commentid: { type: mongoose.Schema.Types.ObjectId },
+  commentid: String,
   rating: Number,
   commenter_username: String,
   timestamp: { type: Date, default: Date.now },

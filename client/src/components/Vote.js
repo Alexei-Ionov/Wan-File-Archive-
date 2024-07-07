@@ -72,8 +72,8 @@ function Vote({fileid, commentid, setDownvoteButton, setUpvoteButton, setFileRat
     };
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Upvote handleVote={handleVote} upvoteButtonClicked={upvoteButtonClicked}/> 
-            <Downvote handleVote={handleVote} downvoteButtonClicked={downvoteButtonClicked}/>
+            <Upvote handleVote={handleVote(1)} upvoteButtonClicked={upvoteButtonClicked}/> 
+            <Downvote handleVote={handleVote(-1)} downvoteButtonClicked={downvoteButtonClicked}/>
         </div>
     );
 
