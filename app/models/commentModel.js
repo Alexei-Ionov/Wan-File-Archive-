@@ -87,3 +87,59 @@ exports.addComment = async (fileid, parentid, comment, commenter_username, owner
         throw err;
     }
 }
+
+async function voteComment(comments, commentid, vote, userID) {
+    console.log(commentid);
+    for (let comment of comments) {
+        if (comment.commentid === commentid) {
+            console.log("PASS");
+            if ((vote === "1" && comment.votes.upvotes.includes(userID)) || (vote === "-1" && comment.votes.downvotes.includes(userID))) {
+                return true;
+            }
+            if (vote === "1") {
+                if (comment.votes.downvotes.includes(userID)) {
+                    comment.votes.downvotes = comment.votes.downvotes.filter(item => item != userID);
+                    comment.rating += 1;
+                }
+                comment.votes.upvotes.push(userID);
+                comment.rating += 1;
+            }
+            if (vote === "-1") {
+                if (comment.votes.upvotes.includes(userID)) {
+                    comment.votes.upvotes = comment.votes.upvotes.filter(item => item != userID);
+                    comment.rating -= 1;
+                } 
+                comment.votes.downvotes.push(userID);
+                comment.rating -= 1;
+            }
+            return true;    
+        }
+        if (await voteComment(comment.nested_comments, commentid, vote, userID)) {
+            return true;
+        }
+    }
+    return false;
+};
+exports.voteComment = async(fileid, commentid, vote, userID) => { 
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try { 
+        const FileComment = await Comments.findOne({fileid: {$eq: fileid}}).session(session);
+        if (!FileComment) {
+            throw new Error("File not found when voting on comment");
+        }
+        const found_comment = await voteComment(FileComment.comments, commentid, vote, userID);
+        if (!found_comment) {
+            throw new Error("Failed to find comment which is being voted on");
+        }
+        await FileComment.save({session});
+        console.log("voted on comment");
+        await session.commitTransaction();
+    } catch (err) {
+        console.log("aborting comment voting transaction");
+        await session.abortTransaction();
+        throw err;
+    } finally {
+        session.endSession();
+    }
+};

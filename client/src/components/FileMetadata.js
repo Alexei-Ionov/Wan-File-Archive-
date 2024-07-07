@@ -1,12 +1,13 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import { Link } from 'react-router-dom';
 import '../css/fileMetadata.css';
-import Upvote from './Upvote';
-import Downvote from './Downvote';
+
+import Vote from './Vote'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpRightFromSquare, faComment} from '@fortawesome/free-solid-svg-icons';
 import CommentBox from './CommentBox';
 import CommentContainer from './CommentContainer';
+
 function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading }) {
   const [upvoteButtonClicked, setUpvoteButton] = useState(file.upvoted);
   const [downvoteButtonClicked, setDownvoteButton] = useState(file.downvoted);
@@ -58,6 +59,7 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading }) 
       console.log(err.message);
     }
   };
+  
   const handleViewComments = async () => {
     setCommentButton(!commentButton);
    
@@ -71,9 +73,10 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading }) 
         method: 'GET',
         credentials: 'include',
       })
-      const fileComments = await response.json();
       /* will be an array of comment objects or [] if none are present */
+      const fileComments = await response.json();
       setComments(fileComments);
+
     } catch (err) {
       console.log(err.message);
     } finally { 
@@ -81,52 +84,6 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading }) 
     }
   };
 
-  const handleVote = async (vote) => {
-    // Prevent upvoting/downvoting consecutively
-    if ((vote === 1 && upvoteButtonClicked) || (vote === -1 && downvoteButtonClicked)) {
-      return;
-    }
-
-    try {
-      // Update button states based on vote
-      if (vote === 1) {
-        if (downvoteButtonClicked && setOwnerRating) {
-          setOwnerRating(ownerRating + 1);
-        }
-        setDownvoteButton(false);
-        setUpvoteButton(true);
-        
-      } else if (vote === -1) {
-        if (upvoteButtonClicked && setOwnerRating) {
-          setOwnerRating(ownerRating - 1);
-        }
-        setDownvoteButton(true);
-        setUpvoteButton(false);
-      }
-
-      // Update ratings
-      setFileRating(fileRating + vote);
-
-      // Update owner rating if applicable
-      if (setOwnerRating) {
-        setOwnerRating(ownerRating + vote);
-      }
-
-      // Send vote request to server
-      const reqVote = vote === -1 ? '-1' : '1';
-      const response = await fetch('http://localhost:8000/content/vote', {
-        method: 'POST',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ fileid: file.fileid, vote: reqVote }),
-        credentials: 'include',
-      });
-      if (!response.ok) {
-        throw new Error("Failed to vote");
-      }
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
   useEffect(() => {
     const getCommentCount = async () => {
       try { 
@@ -161,8 +118,7 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading }) 
       {file &&
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Upvote handleVote={handleVote} upvoteButtonClicked={upvoteButtonClicked}/> 
-            <Downvote handleVote={handleVote} downvoteButtonClicked={downvoteButtonClicked}/>
+            <Vote fileid={file.fileid} commentid={null} setDownvoteButton={setDownvoteButton} setUpvoteButton={setUpvoteButton} setFileRating={setFileRating} setOwnerRating={setOwnerRating} upvoteButtonClicked={upvoteButtonClicked} downvoteButtonClicked={downvoteButtonClicked} />
             <div style={{ color: 'gray', position: 'absolute', top: '20px', left: '10px' }}>{fileRating}</div>
           </div>
           {/* <h3 style={{ textAlign: 'center', margin: '0', position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)' }} onclick="viewFileContents()">{file.filename}</h3> */}
@@ -177,7 +133,7 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading }) 
                 cursor: 'pointer' // Add cursor pointer for visual indication
             }} onClick={viewFileContents}>{file.filename}  {<FontAwesomeIcon icon={faUpRightFromSquare} />} 
           </div>
-          <Link to={`/viewProfile/${file.ownerid}`} className="link-style"> Uploaded by {file.owner}</Link>
+          <Link to={`/viewProfile/${file.ownerid}`} className="file-link-style"> Uploaded by {file.owner}</Link>
           <h5> {commentCount} Comments</h5>
           <button onClick={()=> {
 

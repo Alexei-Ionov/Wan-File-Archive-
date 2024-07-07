@@ -150,12 +150,13 @@ exports.voteFile = async (fileid, vote, userID) => {
         //save the updates to the file object (rating) to mongo
         await file_object.save({session});
 
-        console.log("changed user rating");
+    
         await session.commitTransaction();
-        console.log("voting transaction completed!");
+        console.log("changed user rating");
+        console.log("file voting transaction completed!");
         return true;
     } catch (err) { 
-        console.log("aborting voting transaction");
+        console.log("aborting file voting transaction");
         await session.abortTransaction();
         throw err;
     } finally { 

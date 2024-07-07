@@ -30,3 +30,11 @@ exports.addComment = async (fileid, parentid, comment, commenter_username, owner
         throw err;
     }
 };
+
+exports.voteComment = async(fileid, commentid, vote, userID) => { 
+    try { 
+        await commentModel.voteComment(fileid, commentid, vote, userID);
+    } catch (err) {
+        throw err;
+    }
+};

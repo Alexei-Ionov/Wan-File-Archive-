@@ -22,7 +22,6 @@ exports.getCommentCount = async (req, res, next) => {
 exports.addComment = async (req, res, next) => { 
     const {fileid, parentid, comment, commenter_username} = req.body;
     const ownerid = req.session.userID;
-    console.log(ownerid);
     try {
         if (!fileid || !parentid || !comment || !commenter_username) {
             throw new Error("Request info for comment creation was incomplete");
@@ -33,4 +32,20 @@ exports.addComment = async (req, res, next) => {
         next(err);
     }
     
+};
+
+exports.voteComment = async (req, res, next) =>  {
+    const {fileid, commentid, vote} = req.body;
+    const userID = req.session.userID;
+    try { 
+        if (!commentid || !vote || !fileid) {
+            throw new Error("Improper inputs for voting on comment");
+        }
+        if (vote !== "-1" && vote !== "1") {
+            throw new Error("Invalid vote. Must be -1 or 1");
+        }
+        await commentService.voteComment(fileid, commentid, vote, userID);
+    } catch (err) {
+        next(err);
+    }
 };
