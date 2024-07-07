@@ -120,7 +120,8 @@ async function voteComment(comments, commentid, vote, userID) {
     }
     return false;
 };
-exports.voteComment = async(fileid, commentid, vote, userID) => { 
+exports.voteComment = async(fileid, commentIdString, vote, userID) => { 
+    const commentid = mongoose.Types.ObjectId(commentIdString);
     const session = await mongoose.startSession();
     session.startTransaction();
     try { 
