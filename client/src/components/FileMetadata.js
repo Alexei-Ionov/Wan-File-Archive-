@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/fileMetadata.css';
 
@@ -118,7 +118,7 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading }) 
       {file &&
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Vote fileid={file.fileid} commentid={null} setDownvoteButton={setDownvoteButton} setUpvoteButton={setUpvoteButton} setFileRating={setFileRating} setOwnerRating={setOwnerRating} upvoteButtonClicked={upvoteButtonClicked} downvoteButtonClicked={downvoteButtonClicked} />
+            <Vote fileid={file.fileid} setDownvoteButton={setDownvoteButton} setUpvoteButton={setUpvoteButton} setFileRating={setFileRating} setOwnerRating={setOwnerRating} upvoteButtonClicked={upvoteButtonClicked} downvoteButtonClicked={downvoteButtonClicked}/>
             <div style={{ color: 'gray', position: 'absolute', top: '20px', left: '10px' }}>{fileRating}</div>
           </div>
           {/* <h3 style={{ textAlign: 'center', margin: '0', position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)' }} onclick="viewFileContents()">{file.filename}</h3> */}
@@ -139,7 +139,7 @@ function FileMetadata({ file, ownerRating, setOwnerRating, setCommentLoading }) 
 
             handleViewComments();
             }}>{<FontAwesomeIcon icon={faComment}/>}</button>
-          {commentButton && (<CommentBox fileid={file.fileid} parentid={-1} commenter_username={file.owner} setCommentCount={setCommentCount}/>)}
+          {commentButton && (<CommentBox fileid={file.fileid} parentid={-1} setCommentCount={setCommentCount} setNestedComments={setComments}/>)}
           {commentButton && (<CommentContainer comments={comments} setCommentCount={setCommentCount} fileid={file.fileid}/>)}
         </div>
       }

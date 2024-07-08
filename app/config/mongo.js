@@ -51,7 +51,7 @@ const commentSchema = new mongoose.Schema({
     upvotes: [Number],
     downvotes: [Number],
   },
-  nested_comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comments' }]
+  nested_comments: [this]
 });
 const fileCommentsSchema = new mongoose.Schema({
   fileid: String,

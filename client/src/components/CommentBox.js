@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-
-const CommentBox = ({ fileid, parentid, commenter_username, setCommentCount }) => {
+import React, { useState, useContext} from 'react';
+import { AuthContext } from '../components/AuthContext'; 
+const CommentBox = ({ fileid, parentid, setCommentCount, setNestedComments }) => {
   const [comment, setComment] = useState('');
   const [msg, setMsg] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const { user } = useContext(AuthContext);
+  const commenter_username = user.username
 
   const handleCommentChange = (e) => {
     setComment(e.target.value);
@@ -17,11 +19,17 @@ const CommentBox = ({ fileid, parentid, commenter_username, setCommentCount }) =
         body: JSON.stringify({ fileid, parentid, commenter_username, comment }),
         credentials: 'include',
       });
-      const response_msg = await response.json();
-      if (response_msg && response_msg.success === 1) {
-        setCommentCount(prev => prev + 1);
-        setMsg("Comment added successfully!");
+      if (!response.ok) {
+        throw new Error("Failed to add comment");
       }
+      const new_comment = await response.json();
+      if (!new_comment) {
+        throw new Error("Failed to add comment");
+      }
+     
+      setNestedComments(prev => [new_comment, ...prev]);
+      setCommentCount(prev => prev + 1);
+
     } catch (err) {
       console.log(err.message);
     } finally {

@@ -59,30 +59,32 @@ exports.addComment = async (fileid, parentid, comment, commenter_username, owner
         rating: 0,
         commenter_username: commenter_username, 
         votes: {
-            upvotes: 0, 
-            downvotes: 0
+            upvotes: [], 
+            downvotes: [],
         },
         nested_comments: [],
     };
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try { 
         const file = await Comments.findOne({
             fileid: {$eq: fileid},
-        })
+        }).session(session);
+        if (!file) {
+            throw new Error("File not found when adding comment");
+        }
         //top level commment
         if (parentid === -1) {
             file.comments.push(newComment);
         } else {
-            
-            if (!file) {
-                throw new Error("File not found when adding comment");
-            }
             const found = await addNestedComment(file.comments, parentid, newComment);
             if (!found) {
                 throw new Error("Failed to add new comment");
             }
         }
         file.number_of_comments += 1;
-        await file.save();
+        await file.save({session});
+        return newComment;
     } catch (err) {
         throw err;
     }

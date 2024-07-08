@@ -28,7 +28,7 @@ exports.getCommentComment = async (fileid) => {
 exports.addComment = async (fileid, parentid, comment, commenter_username, ownerid) => {
     const commentid = uuidv4();
     try {
-        await commentModel.addComment(fileid, parentid, comment, commenter_username, ownerid, commentid);
+        return await commentModel.addComment(fileid, parentid, comment, commenter_username, ownerid, commentid);
     } catch (err) {
         throw err;
     }

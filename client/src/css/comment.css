@@ -8,43 +8,29 @@
     flex-direction: column;
     justify-content: space-between;
     position: relative;
+    margin-bottom: 20px; /* Adjust as needed */
 }
 
-.comment .filename {
-    text-align: center;
-    margin: 0;
-    padding-top: 10px;
-}
-
-.comment .commenter {
-    color: #999;
-    font-size: 12px;
-    text-align: center;
-}
-
-.comment .rating {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+.comment-header {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
+    margin-bottom: 10px; /* Adjust as needed */
 }
 
-.comment .rating span {
-    margin-right: 5px;
+.comment-footer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px; /* Adjust as needed */
 }
 
-.comment .rating button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
+.comment-rating {
+    color: gray;
+    margin: 0 10px;
 }
 
 .comment-link-style {
-    position: absolute;
-    top: 10px;
-    right: 80px;
     color: gray;
     font-style: italic;
     text-decoration: none;
@@ -56,4 +42,16 @@
     color: #C8A2C8;
     background-color: transparent;
     /* Change to the color you prefer for hover */
+}
+
+.comment-icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: auto; /* Push the button to the right */
+}
+
+.nested-comment {
+    margin-left: 20px; /* Adjust as needed */
 }

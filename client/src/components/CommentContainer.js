@@ -6,7 +6,6 @@ function CommentContainer({ fileid, comments, setCommentCount }) {
         <div style={{
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
             backgroundColor: '#f9f9f9',
             padding: '20px',
         }}>

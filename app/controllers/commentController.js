@@ -21,13 +21,18 @@ exports.getCommentCount = async (req, res, next) => {
 
 exports.addComment = async (req, res, next) => { 
     const {fileid, parentid, comment, commenter_username} = req.body;
+    console.log(fileid);
+    console.log(parentid);
+    console.log(comment);
+    console.log(commenter_username);
+    
     const ownerid = req.session.userID;
     try {
         if (!fileid || !parentid || !comment || !commenter_username) {
             throw new Error("Request info for comment creation was incomplete");
         }
-        await commentService.addComment(fileid, parentid, comment, commenter_username, ownerid);
-        return res.status(201).json({success: 1});        
+        const new_comment = await commentService.addComment(fileid, parentid, comment, commenter_username, ownerid);
+        return res.status(201).json(new_comment);        
     } catch (err) {
         next(err);
     }

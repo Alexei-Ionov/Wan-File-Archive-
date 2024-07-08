@@ -1,7 +1,7 @@
 import Upvote from './Upvote';
 import Downvote from './Downvote';
 
-function Vote({fileid, commentid, setDownvoteButton, setUpvoteButton, setFileRating, setOwnerRating, upvoteButtonClicked, downvoteButtonClicked}) {
+function Vote({fileid, commentid, setDownvoteButton, setUpvoteButton, setFileRating, setOwnerRating, upvoteButtonClicked, downvoteButtonClicked, setCommentRating}) {
     const handleVote = async (vote) => {
         // Prevent upvoting/downvoting consecutively
         if ((vote === 1 && upvoteButtonClicked) || (vote === -1 && downvoteButtonClicked)) {
@@ -17,10 +17,12 @@ function Vote({fileid, commentid, setDownvoteButton, setUpvoteButton, setFileRat
                     if (setFileRating) {
                         setFileRating(prev => prev + 1);
                     }
+                    if (setCommentRating) {
+                        setCommentRating(prev => prev + 1);
+                    }
                 }
                 setDownvoteButton(false);
                 setUpvoteButton(true);
-                
             } else if (vote === -1) {
                 if (upvoteButtonClicked) {
                     if (setOwnerRating) {
@@ -28,6 +30,9 @@ function Vote({fileid, commentid, setDownvoteButton, setUpvoteButton, setFileRat
                     }
                     if (setFileRating) {
                         setFileRating(prev => prev - 1);
+                    }
+                    if (setCommentRating) {
+                        setCommentRating(prev => prev - 1);
                     }
                 }
                 setDownvoteButton(true);
@@ -42,6 +47,10 @@ function Vote({fileid, commentid, setDownvoteButton, setUpvoteButton, setFileRat
             // Update owner rating if applicable
             if (setOwnerRating) {
                 setOwnerRating(prev => prev + vote);
+            }
+            //update comment rating if this is for a comment vote
+            if (setCommentRating) {
+                setCommentRating(prev => prev + vote);
             }
 
             // Send vote request to server
@@ -72,8 +81,8 @@ function Vote({fileid, commentid, setDownvoteButton, setUpvoteButton, setFileRat
     };
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Upvote handleVote={handleVote(1)} upvoteButtonClicked={upvoteButtonClicked}/> 
-            <Downvote handleVote={handleVote(-1)} downvoteButtonClicked={downvoteButtonClicked}/>
+            <Upvote handleVote={handleVote} upvoteButtonClicked={upvoteButtonClicked}/> 
+            <Downvote handleVote={handleVote} downvoteButtonClicked={downvoteButtonClicked}/>
         </div>
     );
 
